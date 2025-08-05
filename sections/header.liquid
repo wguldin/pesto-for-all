@@ -26,6 +26,7 @@
       </a>
       <ul class="nav__link-list">
         <li class="nav__link"><a class="fancy-link" href="/collections/all" aria-label="Shop our products">Shop</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/pages/where-to-find-us" aria-label="Find our pesto in stores">Find our pesto in stores</a></li>
         <li class="nav__link"><a class="fancy-link" href="/#about-us" aria-label="Learn about us">About Us</a></li>
       </ul>
       <button class="nav__cart" aria-label="Open cart" aria-controls="cart-flyout" aria-expanded="false">
@@ -42,6 +43,7 @@
       <ul class="mobile-menu__links">
         <li><a href="/" aria-label="Home page">Home</a></li>
         <li><a href="/collections/all" aria-label="Shop our products">Shop</a></li>
+        <li><a href="/pages/where-to-find-us" aria-label="Find our pesto in stores">Find our pesto in stores</a></li>
         <li><a href="/#about-us" aria-label="Learn about us">About Us</a></li>
       </ul>
     </div>
@@ -85,9 +87,6 @@
             </div>
           {% endfor %}
         
-        <div class="cart-flyout__footer">
-          <a href="/cart" class="button button--primary cart-flyout__checkout">Checkout now</a>
-        </div>
         {% else %}
           <div class="cart-flyout__empty">
             <p>Your cart is empty</p>
@@ -95,6 +94,15 @@
           </div>
         {% endif %}
       </div>
+    </div>
+    
+    <!-- Cart Footer - Pinned to bottom -->
+    <div class="cart-flyout__footer">
+      <div class="cart-flyout__subtotal">
+        <span>Subtotal:</span>
+        <span class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</span>
+      </div>
+      <a href="/checkout" class="button button--primary cart-flyout__checkout">Checkout now</a>
     </div>
   </div>
 </header>

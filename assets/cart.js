@@ -232,6 +232,9 @@ class CartManager {
     // Update header subtotal visibility
     this.updateHeaderSubtotal(cart);
 
+    // Update footer visibility
+    this.updateFooterVisibility(cart.item_count > 0);
+
     if (cart.item_count === 0) {
       this.cartItems.innerHTML = `
         <div class="cart-flyout__empty">
@@ -252,15 +255,18 @@ class CartManager {
     this.updateCartSubtotal(cart.total_price);
   }
 
+  updateFooterVisibility(hasItems) {
+    const footer = document.querySelector('.cart-flyout__footer');
+    if (footer) {
+      footer.style.display = hasItems ? 'block' : 'none';
+    }
+  }
+
   ensureCartFooter(totalPrice) {
-    let footer = this.cartItems.querySelector('.cart-flyout__footer');
+    // Footer is now in the HTML structure, just ensure it exists
+    const footer = document.querySelector('.cart-flyout__footer');
     if (!footer) {
-      footer = document.createElement('div');
-      footer.className = 'cart-flyout__footer';
-      footer.innerHTML = `
-        <a href="/cart" class="button button--primary cart-flyout__checkout">Checkout now</a>
-      `;
-      this.cartItems.appendChild(footer);
+      console.warn('Cart footer not found in DOM');
     }
   }
 
@@ -387,9 +393,6 @@ class CartManager {
   }
 
   reorderCartItems(newItems) {
-    // Get the footer to preserve it
-    const footer = this.cartItems.querySelector('.cart-flyout__footer');
-    
     // Create ordered list of items
     const orderedItems = [];
     newItems.forEach(item => {
@@ -399,16 +402,12 @@ class CartManager {
       }
     });
     
-    // Remove all cart items from DOM (but keep footer)
+    // Remove all cart items from DOM
     this.cartItems.querySelectorAll('.cart-item').forEach(item => item.remove());
     
-    // Re-insert items in correct order before the footer
+    // Re-insert items in correct order
     orderedItems.forEach(item => {
-      if (footer) {
-        this.cartItems.insertBefore(item, footer);
-      } else {
-        this.cartItems.appendChild(item);
-      }
+      this.cartItems.appendChild(item);
     });
   }
 
