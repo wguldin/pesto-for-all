@@ -86,8 +86,6 @@ class CartManager {
       } else if (e.target.classList.contains('quantity-btn--minus')) {
         this.animateButtonClick(e.target);
         this.updateQuantity(e.target.dataset.itemKey, -1);
-      } else if (e.target.classList.contains('cart-item__remove')) {
-        this.removeItemWithAnimation(e.target.dataset.itemKey);
       }
     });
 
@@ -123,7 +121,7 @@ class CartManager {
       CartJS.addItem(variantId, quantity, properties, {
         success: () => {
           this.openCart();
-          this.showNotification('Item added to cart!', 'success');
+          // Removed success notification - cart opening and badge update provide sufficient feedback
         },
         error: (jqXHR, textStatus) => {
           let errorMessage = 'Failed to add item to cart';
@@ -162,7 +160,16 @@ class CartManager {
     const newQuantity = Math.max(0, currentQuantity + change);
 
     if (newQuantity === 0) {
-      this.removeItem(itemKey);
+      // Add removal animation before removing item
+      const item = this.findCartItem(itemKey);
+      if (item) {
+        item.classList.add('cart-item--removing');
+        setTimeout(() => {
+          this.removeItem(itemKey);
+        }, 300);
+      } else {
+        this.removeItem(itemKey);
+      }
       return;
     }
 
@@ -229,9 +236,6 @@ class CartManager {
   updateCartContent(cart) {
     if (!this.cartItems) return;
 
-    // Update header subtotal visibility
-    this.updateHeaderSubtotal(cart);
-
     // Update footer visibility
     this.updateFooterVisibility(cart.item_count > 0);
 
@@ -243,6 +247,12 @@ class CartManager {
         </div>
       `;
       return;
+    }
+
+    // Clear empty state if it exists (when transitioning from empty to having items)
+    const emptyState = this.cartItems.querySelector('.cart-flyout__empty');
+    if (emptyState) {
+      this.cartItems.innerHTML = '';
     }
 
     // Ensure footer exists
@@ -277,23 +287,6 @@ class CartManager {
     }
   }
 
-  updateHeaderSubtotal(cart) {
-    const titleElement = document.querySelector('.cart-flyout__title');
-    const subtotalElements = titleElement?.querySelectorAll('.cart-flyout__subtotal-bullet, .cart-flyout__subtotal-label, .cart-flyout__subtotal-amount');
-    
-    if (subtotalElements && subtotalElements.length > 0) {
-      if (cart.item_count > 0) {
-        subtotalElements.forEach(element => {
-          element.style.display = 'inline';
-        });
-        this.updateCartSubtotal(cart.total_price);
-      } else {
-        subtotalElements.forEach(element => {
-          element.style.display = 'none';
-        });
-      }
-    }
-  }
 
   updateCartItemsIntelligently(newItems) {
     const existingItems = Array.from(this.cartItems.querySelectorAll('.cart-item'));
@@ -381,7 +374,6 @@ class CartManager {
         <span class="quantity-display">${item.quantity}</span>
         <button class="quantity-btn quantity-btn--plus" data-item-key="${item.key}" aria-label="Increase quantity">+</button>
       </div>
-      <button class="cart-item__remove" data-item-key="${item.key}" aria-label="Remove item">&times;</button>
     `;
     
     // Remove entering class after animation
@@ -449,18 +441,6 @@ class CartManager {
     }
   }
 
-  removeItemWithAnimation(itemKey) {
-    const item = this.findCartItem(itemKey);
-    if (!item) return;
-
-    // Add removing animation
-    item.classList.add('cart-item--removing');
-    
-    // Remove from cart after animation
-    setTimeout(() => {
-      this.removeItem(itemKey);
-    }, 300);
-  }
 
   formatMoney(cents) {
     return new Intl.NumberFormat('en-US', {

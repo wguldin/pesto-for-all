@@ -52,16 +52,7 @@
   <!-- Cart Flyout -->
   <div id="cart-flyout" class="cart-flyout" aria-hidden="true">
     <div class="cart-flyout__header">
-      <div class="cart-flyout__header-content">
-        <h2 class="cart-flyout__title">
-          Your Cart
-          {% if cart.item_count > 0 %}
-            <span class="cart-flyout__subtotal-bullet">•</span>
-            <span class="cart-flyout__subtotal-label">Subtotal:</span>
-            <span class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</span>
-          {% endif %}
-        </h2>
-      </div>
+      <h2 class="cart-flyout__title">Your Cart</h2>
       <button class="cart-flyout__close" aria-label="Close cart">&times;</button>
     </div>
     
@@ -74,16 +65,15 @@
                 <img src="{{ item.image | image_url: width: 80, height: 80 }}" alt="{{ item.title }}" loading="lazy">
               </div>
               <div class="cart-item__details">
-                <h3 class="cart-item__title">{{ item.product.title }}</h3>
+                <h4 class="cart-item__title">{{ item.product.title }}</h4>
                 <p class="cart-item__variant">{{ item.variant.title }}</p>
-                <div class="cart-item__price">{{ item.final_price | money }}</div>
+                <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
               </div>
               <div class="cart-item__quantity">
                 <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
                 <span class="quantity-display">{{ item.quantity }}</span>
                 <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
               </div>
-              <button class="cart-item__remove" data-item-key="{{ item.key }}" aria-label="Remove item">&times;</button>
             </div>
           {% endfor %}
         
@@ -99,8 +89,8 @@
     <!-- Cart Footer - Pinned to bottom -->
     <div class="cart-flyout__footer">
       <div class="cart-flyout__subtotal">
-        <span>Subtotal:</span>
-        <span class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</span>
+        <h4>Subtotal</h4>
+        <h4 class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</h4>
       </div>
       <a href="/checkout" class="button button--primary cart-flyout__checkout">Checkout now</a>
     </div>
