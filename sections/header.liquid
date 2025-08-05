@@ -50,7 +50,16 @@
   <!-- Cart Flyout -->
   <div id="cart-flyout" class="cart-flyout" aria-hidden="true">
     <div class="cart-flyout__header">
-      <h2 class="cart-flyout__title">Your Cart</h2>
+      <div class="cart-flyout__header-content">
+        <h2 class="cart-flyout__title">
+          Your Cart
+          {% if cart.item_count > 0 %}
+            <span class="cart-flyout__subtotal-bullet">•</span>
+            <span class="cart-flyout__subtotal-label">Subtotal:</span>
+            <span class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</span>
+          {% endif %}
+        </h2>
+      </div>
       <button class="cart-flyout__close" aria-label="Close cart">&times;</button>
     </div>
     
@@ -77,11 +86,7 @@
           {% endfor %}
         
         <div class="cart-flyout__footer">
-          <div class="cart-flyout__subtotal">
-            <span>Subtotal:</span>
-            <span>{{ cart.total_price | money }}</span>
-          </div>
-          <a href="/cart" class="button button--primary cart-flyout__checkout">View Cart & Checkout</a>
+          <a href="/cart" class="button button--primary cart-flyout__checkout">Checkout now</a>
         </div>
         {% else %}
           <div class="cart-flyout__empty">

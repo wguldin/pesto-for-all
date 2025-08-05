@@ -229,6 +229,9 @@ class CartManager {
   updateCartContent(cart) {
     if (!this.cartItems) return;
 
+    // Update header subtotal visibility
+    this.updateHeaderSubtotal(cart);
+
     if (cart.item_count === 0) {
       this.cartItems.innerHTML = `
         <div class="cart-flyout__empty">
@@ -255,20 +258,34 @@ class CartManager {
       footer = document.createElement('div');
       footer.className = 'cart-flyout__footer';
       footer.innerHTML = `
-        <div class="cart-flyout__subtotal">
-          <span>Subtotal:</span>
-          <span>${this.formatMoney(totalPrice)}</span>
-        </div>
-        <a href="/cart" class="button button--primary cart-flyout__checkout">View Cart & Checkout</a>
+        <a href="/cart" class="button button--primary cart-flyout__checkout">Checkout now</a>
       `;
       this.cartItems.appendChild(footer);
     }
   }
 
   updateCartSubtotal(totalPrice) {
-    const subtotalElement = this.cartItems.querySelector('.cart-flyout__subtotal span:last-child');
+    const subtotalElement = document.querySelector('.cart-flyout__subtotal-amount');
     if (subtotalElement) {
       subtotalElement.textContent = this.formatMoney(totalPrice);
+    }
+  }
+
+  updateHeaderSubtotal(cart) {
+    const titleElement = document.querySelector('.cart-flyout__title');
+    const subtotalElements = titleElement?.querySelectorAll('.cart-flyout__subtotal-bullet, .cart-flyout__subtotal-label, .cart-flyout__subtotal-amount');
+    
+    if (subtotalElements && subtotalElements.length > 0) {
+      if (cart.item_count > 0) {
+        subtotalElements.forEach(element => {
+          element.style.display = 'inline';
+        });
+        this.updateCartSubtotal(cart.total_price);
+      } else {
+        subtotalElements.forEach(element => {
+          element.style.display = 'none';
+        });
+      }
     }
   }
 
