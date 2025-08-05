@@ -10,7 +10,17 @@
       <button class="button hero__cta" data-modal-open="waitlist-modal">Join our waitlist!</button>
     </div>
     <div class="hero__image-wrapper">
-      <img src="{{ 'food-photo.jpg' | asset_url }}" class="hero__image" alt="Fresh pesto as part of an italian meal"/>
+      <img 
+        src="{{ 'food-photo-400w.jpg' | asset_url }}" 
+        srcset="{{ 'food-photo-400w.jpg' | asset_url }} 400w,
+                {{ 'food-photo-800w.jpg' | asset_url }} 800w,
+                {{ 'food-photo-1200w.jpg' | asset_url }} 1200w,
+                {{ 'food-photo.jpg' | asset_url }} 1600w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        class="hero__image" 
+        alt="Fresh pesto as part of an italian meal"
+        loading="eager"
+      />
     </div>
   </div>
   {% render 'divider' %}
