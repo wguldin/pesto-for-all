@@ -28,7 +28,7 @@
     {% endif %}
 
     {% render 'meta-tags' %}
-
+    
     {{ content_for_header }}
 
     {%- liquid
@@ -103,6 +103,7 @@
         cart_add_url: '{{ routes.cart_add_url }}',
         cart_change_url: '{{ routes.cart_change_url }}',
         cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '/cart.js',
         predictive_search_url: '{{ routes.predictive_search_url }}'
       };
 
@@ -116,11 +117,56 @@
         soldOut: `{{ 'products.product.sold_out' | t }}`,
         unavailable: `{{ 'products.product.unavailable' | t }}`,
       }
+
+      // Initialize cart data for Cart.js
+      window.cartData = {
+        item_count: {{ cart.item_count | default: 0 }},
+        total_price: {{ cart.total_price | default: 0 }},
+        items: [
+          {% for item in cart.items %}
+          {
+            key: "{{ item.key }}",
+            id: {{ item.variant_id }},
+            product_id: {{ item.product_id }},
+            variant_id: {{ item.variant_id }},
+            title: "{{ item.title | escape }}",
+            product_title: "{{ item.product.title | escape }}",
+            variant_title: {% if item.variant.title != 'Default Title' %}"{{ item.variant.title | escape }}"{% else %}null{% endif %},
+            quantity: {{ item.quantity }},
+            price: {{ item.price }},
+            final_price: {{ item.final_price }},
+            line_price: {{ item.line_price }},
+            final_line_price: {{ item.final_line_price }},
+            image: "{{ item.image | image_url: width: 300 }}",
+            url: "{{ item.url }}",
+            vendor: "{{ item.vendor | escape }}",
+            properties: {
+              {% for property in item.properties %}
+                {% unless property.last == blank %}
+                  "{{ property.first | escape }}": "{{ property.last | escape }}"{% unless forloop.last %},{% endunless %}
+                {% endunless %}
+              {% endfor %}
+            }
+          }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ],
+        attributes: {
+          {% for attribute in cart.attributes %}
+            "{{ attribute.first | escape }}": "{{ attribute.last | escape }}"{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        },
+        note: {% if cart.note != blank %}"{{ cart.note | escape }}"{% else %}null{% endif %},
+        currency: "{{ cart.currency.iso_code }}"
+      };
     </script>
 
     {{ content_for_footer }}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ 'cartjs.min.js' | asset_url }}"></script>
     <script src="{{ 'modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'block-transitions.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'cart.js' | asset_url }}"></script>
+    <script src="{{ 'products.js' | asset_url }}" defer="defer"></script>
   </body>
 </html> 

@@ -1,0 +1,99 @@
+<div class="collection-products">
+  <div class="collection-products__container">
+    {% if collection.products.size > 0 %}
+      
+      <!-- Pre-filter products into featured and non-featured arrays -->
+      {% assign featured_product = null %}
+      {% assign non_featured_count = 0 %}
+      
+      {% for product in collection.products %}
+        {% if product.tags contains 'Featured' and featured_product == null %}
+          {% assign featured_product = product %}
+        {% else %}
+          {% assign non_featured_count = non_featured_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      
+      <!-- Main Product Section -->
+      {% if featured_product %}
+        <div class="main-product">
+          <div class="main-product__container">
+            {% render 'product-card', 
+              product: featured_product, 
+              image_size: '600x600', 
+              show_description: true, 
+              card_class: 'main-product' 
+            %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Merch Section -->
+      {% if non_featured_count > 0 %}
+        <div class="merch-section">
+          <h3 class="merch-section__title">Merch</h3>
+          <div class="products-grid">
+                        {% for product in collection.products %}
+              {% unless product.tags contains 'Featured' %}
+                {% render 'product-card', 
+                  product: product, 
+                  image_size: '400x400', 
+                  show_description: false, 
+                  card_class: 'product-card' 
+                %}
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      
+      {% if paginate.pages > 1 %}
+        <div class="pagination">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endif %}
+      
+    {% else %}
+      <div class="collection-products__empty">
+        <p>No products found in this collection.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Products",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 12,
+      "label": "Products per page"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 per row"
+        },
+        {
+          "value": "3",
+          "label": "3 per row"
+        },
+        {
+          "value": "4",
+          "label": "4 per row"
+        }
+      ],
+      "default": "3",
+      "label": "Products per row"
+    }
+  ]
+}
+{% endschema %} 

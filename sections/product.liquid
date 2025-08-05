@@ -1,0 +1,147 @@
+<div class="product-page">
+  <div class="product-page__container">
+    <div class="product-page__gallery">
+      {% if product.images.size > 0 %}
+        <div class="product-gallery">
+          <div class="product-gallery__main">
+            <img 
+              src="{{ product.featured_image | image_url: width: 600, height: 600 }}" 
+              alt="{{ product.title }}"
+              id="product-main-image"
+              loading="eager"
+            >
+          </div>
+          {% if product.images.size > 1 %}
+            <div class="product-gallery__thumbs">
+              {% for image in product.images %}
+                <button 
+                  class="product-gallery__thumb{% if forloop.first %} product-gallery__thumb--active{% endif %}"
+                  data-image-url="{{ image | image_url: width: 600, height: 600 }}"
+                  aria-label="View {{ product.title }} image {{ forloop.index }}"
+                >
+                  <img 
+                    src="{{ image | image_url: width: 100, height: 100 }}" 
+                    alt="{{ product.title }}"
+                    loading="lazy"
+                  >
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-page__details">
+      <h1 class="product-page__title">{{ product.title }}</h1>
+      
+      <div class="product-page__price">
+        {% if product.compare_at_price > product.price %}
+          <span class="product-page__price--sale">{{ product.price | money }}</span>
+          <span class="product-page__price--compare">{{ product.compare_at_price | money }}</span>
+        {% else %}
+          <span class="product-page__price--regular">{{ product.price | money }}</span>
+        {% endif %}
+      </div>
+
+      {% if product.description != blank %}
+        <div class="product-page__description">
+          {{ product.description }}
+        </div>
+      {% endif %}
+
+      {% if product.available %}
+        <form class="product-page__form" data-product-form="{{ product.id }}">
+          {% if product.has_only_default_variant %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <div class="product-page__quantity">
+              <label for="quantity">Quantity:</label>
+              <div class="quantity-selector">
+                <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">
+                <button type="button" class="quantity-btn quantity-btn--plus" data-action="increase">+</button>
+              </div>
+            </div>
+            <button 
+              type="submit" 
+              class="button button--primary product-page__add-to-cart"
+              data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            >
+              Add to Cart
+            </button>
+          {% else %}
+            <div class="product-page__variants">
+              {% for option in product.options_with_values %}
+                <div class="product-page__option">
+                  <label for="option-{{ option.name | handleize }}">{{ option.name }}:</label>
+                  <select 
+                    id="option-{{ option.name | handleize }}" 
+                    name="options[{{ option.name | escape }}]"
+                    data-option-index="{{ forloop.index0 }}"
+                    class="product-page__variant-select"
+                  >
+                    {% for value in option.values %}
+                      <option 
+                        value="{{ value | escape }}"
+                        {% if option.selected_value == value %}selected="selected"{% endif %}
+                      >
+                        {{ value }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+            
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="variant-id">
+            
+            <div class="product-page__quantity">
+              <label for="quantity">Quantity:</label>
+              <div class="quantity-selector">
+                <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">
+                <button type="button" class="quantity-btn quantity-btn--plus" data-action="increase">+</button>
+              </div>
+            </div>
+            
+            <button 
+              type="submit" 
+              class="button button--primary product-page__add-to-cart"
+              data-product-id="{{ product.id }}"
+            >
+              Add to Cart
+            </button>
+          {% endif %}
+        </form>
+      {% else %}
+        <div class="product-page__unavailable">
+          <span class="product-page__sold-out">Sold Out</span>
+        </div>
+      {% endif %}
+
+      {% if product.vendor %}
+        <div class="product-page__vendor">
+          <span>Vendor: {{ product.vendor }}</span>
+        </div>
+      {% endif %}
+
+      {% if product.type %}
+        <div class="product-page__type">
+          <span>Type: {{ product.type }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Page Settings"
+    }
+  ]
+}
+{% endschema %} 

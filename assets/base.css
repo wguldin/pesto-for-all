@@ -79,6 +79,7 @@ a:hover {
   color: var(--color-text);
   font-family: "Quicksand", sans-serif;
   font-weight: 700;
+  font-size: 1.5rem;
   padding: 0.875rem 1.5rem;
   border-radius: 0.75rem;
   background: linear-gradient(135deg, var(--color-green--light) 0%, color-mix(in srgb, var(--color-green--light) 90%, white) 100%);
@@ -89,6 +90,7 @@ a:hover {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 .button:hover {
@@ -196,6 +198,6 @@ main:focus {
 
   .button {
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
 } 

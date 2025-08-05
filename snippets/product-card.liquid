@@ -1,0 +1,85 @@
+{% comment %}
+  Product Card Snippet
+  Usage: {% render 'product-card', product: product, image_size: '400x400', show_description: false %}
+  
+  Parameters:
+  - product: The product object to display
+  - image_size: Image dimensions (default: '400x400')
+  - show_description: Whether to show product description (default: false)
+  - card_class: Additional CSS class for the card (default: 'product-card')
+{% endcomment %}
+
+{% assign image_size = image_size | default: '400x400' %}
+{% assign show_description = show_description | default: false %}
+{% assign card_class = card_class | default: 'product-card' %}
+
+<div class="{{ card_class }}" data-product-id="{{ product.id }}">
+  <div class="{{ card_class }}__image">
+    <a href="{{ product.url }}" class="{{ card_class }}__image-link">
+      {% assign width = image_size | split: 'x' | first %}
+      {% assign height = image_size | split: 'x' | last %}
+      <img 
+        src="{{ product.featured_image | image_url: width: width, height: height }}" 
+        alt="{{ product.title }}"
+        loading="{% if show_description %}eager{% else %}lazy{% endif %}"
+        class="{{ card_class }}__image--primary"
+      >
+      {% if product.images.size > 1 %}
+        <img 
+          src="{{ product.images[1] | image_url: width: width, height: height }}" 
+          alt="{{ product.title }}"
+          loading="lazy"
+          class="{{ card_class }}__image--secondary"
+        >
+      {% endif %}
+    </a>
+  </div>
+  
+  <div class="{{ card_class }}__content">
+    <h3 class="{{ card_class }}__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+    
+    {% if show_description and product.description != blank %}
+      <div class="{{ card_class }}__description">
+        {{ product.description }}
+      </div>
+    {% endif %}
+    
+    {% if product.available %}
+      <div class="{{ card_class }}__form">
+        <form class="product-form" data-product-form="{{ product.id }}">
+          {% if product.has_only_default_variant %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button 
+              type="submit" 
+              class="button {{ card_class }}__add-to-cart"
+              data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            >
+              <span class="{{ card_class }}__button-text">Quick Add</span>
+              <span class="{{ card_class }}__button-bullet">•</span>
+              <span class="{{ card_class }}__button-price">
+                {% if product.compare_at_price > product.price %}
+                  {{ product.price | money }}
+                {% else %}
+                  {{ product.price | money }}
+                {% endif %}
+              </span>
+            </button>
+          {% else %}
+            <a 
+              href="{{ product.url }}" 
+              class="button {{ card_class }}__get-started"
+            >
+              Get Started
+            </a>
+          {% endif %}
+        </form>
+      </div>
+    {% else %}
+      <div class="{{ card_class }}__unavailable">
+        <span class="{{ card_class }}__sold-out">Sold Out</span>
+      </div>
+    {% endif %}
+  </div>
+</div> 
