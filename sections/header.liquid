@@ -62,17 +62,21 @@
           {% for item in cart.items %}
             <div class="cart-item" data-item-key="{{ item.key }}">
               <div class="cart-item__image">
-                <img src="{{ item.image | image_url: width: 80, height: 80 }}" alt="{{ item.title }}" loading="lazy">
+                <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
               </div>
               <div class="cart-item__details">
                 <h4 class="cart-item__title">{{ item.product.title }}</h4>
-                <p class="cart-item__variant">{{ item.variant.title }}</p>
-                <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
-              </div>
-              <div class="cart-item__quantity">
-                <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
-                <span class="quantity-display">{{ item.quantity }}</span>
-                <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
+                  <p class="cart-item__variant">{{ item.variant.title }}</p>
+                {% endif %}
+                <div class="cart-item__price-row">
+                  <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
+                  <div class="cart-item__quantity">
+                    <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                    <span class="quantity-display">{{ item.quantity }}</span>
+                    <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
               </div>
             </div>
           {% endfor %}

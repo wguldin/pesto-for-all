@@ -55,7 +55,7 @@
           {% if product.has_only_default_variant %}
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
             <div class="product-page__quantity">
-              <label for="quantity">Quantity:</label>
+              <label for="quantity">Quantity</label>
               <div class="quantity-selector">
                 <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">
@@ -73,30 +73,61 @@
             <div class="product-page__variants">
               {% for option in product.options_with_values %}
                 <div class="product-page__option">
-                  <label for="option-{{ option.name | handleize }}">{{ option.name }}:</label>
-                  <select 
-                    id="option-{{ option.name | handleize }}" 
-                    name="options[{{ option.name | escape }}]"
-                    data-option-index="{{ forloop.index0 }}"
-                    class="product-page__variant-select"
-                  >
+                  <label class="product-page__option-label">{{ option.name }}</label>
+                  <div class="product-page__option-pills" data-option-index="{{ forloop.index0 }}">
                     {% for value in option.values %}
-                      <option 
-                        value="{{ value | escape }}"
-                        {% if option.selected_value == value %}selected="selected"{% endif %}
+                      {% assign variant_available = false %}
+                      {% assign variant_image = null %}
+                      {% for variant in product.variants %}
+                        {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
+                          {% if variant.available %}
+                            {% assign variant_available = true %}
+                          {% endif %}
+                          {% if variant.featured_image %}
+                            {% assign variant_image = variant.featured_image %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                      <button 
+                        type="button"
+                        class="product-page__option-pill{% if option.selected_value == value %} product-page__option-pill--active{% endif %}"
+                        data-option-value="{{ value | escape }}"
+                        data-available="{{ variant_available }}"
+                        data-variant-image="{% if variant_image %}{{ variant_image | image_url: width: 600, height: 600 }}{% endif %}"
+                        {% unless variant_available %}disabled{% endunless %}
                       >
                         {{ value }}
-                      </option>
+                      </button>
                     {% endfor %}
-                  </select>
+                  </div>
+                  <input type="hidden" name="options[{{ option.name | escape }}]" value="{{ option.selected_value }}" data-option-index="{{ forloop.index0 }}">
                 </div>
               {% endfor %}
             </div>
             
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="variant-id">
             
+            <script type="application/json" id="product-variants-json">
+              {
+                "variants": [
+                  {% for variant in product.variants %}
+                  {
+                    "id": {{ variant.id }},
+                    "title": "{{ variant.title | escape }}",
+                    "available": {{ variant.available }},
+                    "price": {{ variant.price }},
+                    "compare_at_price": {{ variant.compare_at_price | default: 0 }},
+                    "option1": "{{ variant.option1 | escape }}",
+                    "option2": "{{ variant.option2 | escape }}",
+                    "option3": "{{ variant.option3 | escape }}"
+                  }{% unless forloop.last %},{% endunless %}
+                  {% endfor %}
+                ]
+              }
+            </script>
+            
             <div class="product-page__quantity">
-              <label for="quantity">Quantity:</label>
+              <label for="quantity">Quantity</label>
               <div class="quantity-selector">
                 <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">

@@ -137,7 +137,7 @@
             final_price: {{ item.final_price }},
             line_price: {{ item.line_price }},
             final_line_price: {{ item.final_line_price }},
-            image: "{{ item.image | image_url: width: 300 }}",
+            image: "{{ item.image | image_url: width: 160, height: 160 }}",
             url: "{{ item.url }}",
             vendor: "{{ item.vendor | escape }}",
             properties: {

@@ -117,6 +117,20 @@ class CartManager {
 
   async addToCart(variantId, quantity = 1, properties = {}) {
     try {
+      // Check cart quantity limits before adding
+      const currentCartTotal = this.getCurrentCartTotal();
+      const newCartTotal = currentCartTotal + quantity;
+      
+      if (newCartTotal > 50) {
+        const maxAllowed = 50 - currentCartTotal;
+        if (maxAllowed <= 0) {
+          this.showNotification('Cart is full (50 item limit)', 'error');
+        } else {
+          this.showNotification(`Can only add ${maxAllowed} more item${maxAllowed !== 1 ? 's' : ''} (50 item limit)`, 'error');
+        }
+        throw new Error('Cart quantity limit exceeded');
+      }
+
       // Use Cart.js addItem method
       CartJS.addItem(variantId, quantity, properties, {
         success: () => {
@@ -137,7 +151,9 @@ class CartManager {
       
     } catch (error) {
       console.error('Error adding to cart:', error);
-      this.showNotification(error.message || 'Failed to add item to cart', 'error');
+      if (!error.message.includes('quantity limit')) {
+        this.showNotification(error.message || 'Failed to add item to cart', 'error');
+      }
       throw error;
     }
   }
@@ -159,14 +175,35 @@ class CartManager {
     const currentQuantity = parseInt(quantityDisplay.textContent);
     const newQuantity = Math.max(0, currentQuantity + change);
 
+    // Check cart quantity limits
+    if (change > 0) { // Only check when increasing
+      const currentCartTotal = this.getCurrentCartTotal();
+      const newCartTotal = currentCartTotal + change;
+      
+      if (newCartTotal > 50) {
+        this.showNotification('Cart cannot exceed 50 items total', 'error');
+        this.animateButtonError(item.querySelector(change > 0 ? '.quantity-btn--plus' : '.quantity-btn--minus'));
+        return;
+      }
+    }
+
+    // Update display immediately for responsive feel
+    quantityDisplay.textContent = newQuantity;
+    this.animateQuantityChange(quantityDisplay);
+
     if (newQuantity === 0) {
-      // Add removal animation before removing item
+      // Add removal animation and remove from DOM immediately after
       const item = this.findCartItem(itemKey);
       if (item) {
         item.classList.add('cart-item--removing');
+        
+        // Remove from DOM after animation completes
         setTimeout(() => {
-          this.removeItem(itemKey);
-        }, 300);
+          item.remove();
+        }, 400); // Slightly longer to match the new animation timing
+        
+        // Also trigger Cart.js removal (this may take longer but won't affect UI)
+        this.removeItem(itemKey);
       } else {
         this.removeItem(itemKey);
       }
@@ -178,6 +215,8 @@ class CartManager {
     if (lineNumber) {
       CartJS.updateItem(lineNumber, newQuantity, {}, {
         error: () => {
+          // Revert the quantity display on error
+          quantityDisplay.textContent = currentQuantity;
           this.showNotification('Failed to update quantity', 'error');
         }
       });
@@ -319,9 +358,6 @@ class CartManager {
   }
 
   updateExistingCartItem(itemElement, itemData) {
-    // Add updating animation
-    this.animateItemUpdate(itemElement);
-
     // Update quantity display with animation
     const quantityDisplay = itemElement.querySelector('.quantity-display');
     if (quantityDisplay) {
@@ -366,13 +402,15 @@ class CartManager {
       </div>
       <div class="cart-item__details">
         <h3 class="cart-item__title">${item.product_title}</h3>
-        <p class="cart-item__variant">${item.variant_title || ''}</p>
-        <div class="cart-item__price">${this.formatMoney(item.final_price)}</div>
-      </div>
-      <div class="cart-item__quantity">
-        <button class="quantity-btn quantity-btn--minus" data-item-key="${item.key}" aria-label="Decrease quantity">-</button>
-        <span class="quantity-display">${item.quantity}</span>
-        <button class="quantity-btn quantity-btn--plus" data-item-key="${item.key}" aria-label="Increase quantity">+</button>
+        ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="cart-item__variant">${item.variant_title}</p>` : ''}
+        <div class="cart-item__price-row">
+          <div class="cart-item__price">${this.formatMoney(item.final_price)}</div>
+          <div class="cart-item__quantity">
+            <button class="quantity-btn quantity-btn--minus" data-item-key="${item.key}" aria-label="Decrease quantity">-</button>
+            <span class="quantity-display">${item.quantity}</span>
+            <button class="quantity-btn quantity-btn--plus" data-item-key="${item.key}" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
       </div>
     `;
     
@@ -425,12 +463,6 @@ class CartManager {
     }, 400);
   }
 
-  animateItemUpdate(itemElement) {
-    itemElement.classList.add('cart-item--updating');
-    setTimeout(() => {
-      itemElement.classList.remove('cart-item--updating');
-    }, 300);
-  }
 
   animateCartBadge() {
     if (this.cartCount) {
@@ -438,6 +470,29 @@ class CartManager {
       setTimeout(() => {
         this.cartCount.classList.remove('nav__cart-count--updated');
       }, 500);
+    }
+  }
+
+  getCurrentCartTotal() {
+    // Get current total from DOM or CartJS
+    if (CartJS.cart && CartJS.cart.items) {
+      return CartJS.cart.items.reduce((total, item) => total + item.quantity, 0);
+    }
+    
+    // Fallback: count from DOM
+    let total = 0;
+    document.querySelectorAll('.cart-item .quantity-display').forEach(display => {
+      total += parseInt(display.textContent) || 0;
+    });
+    return total;
+  }
+
+  animateButtonError(button) {
+    if (button) {
+      button.classList.add('quantity-btn--error');
+      setTimeout(() => {
+        button.classList.remove('quantity-btn--error');
+      }, 300);
     }
   }
 
