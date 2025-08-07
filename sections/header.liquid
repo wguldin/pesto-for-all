@@ -70,12 +70,12 @@
                   <p class="cart-item__variant">{{ item.variant.title }}</p>
                 {% endif %}
                 <div class="cart-item__price-row">
-                  <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
                   <div class="cart-item__quantity">
                     <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
                     <span class="quantity-display">{{ item.quantity }}</span>
                     <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
                   </div>
+                  <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
                 </div>
               </div>
             </div>
