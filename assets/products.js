@@ -43,6 +43,13 @@ class ProductForms {
         this.handleGalleryThumbClick(e.target.closest('.product-gallery__thumb'));
       }
     });
+
+    // Handle direct quantity input changes
+    document.addEventListener('input', (e) => {
+      if (e.target.classList.contains('quantity-input')) {
+        this.handleQuantityInputChange(e.target);
+      }
+    });
   }
 
   handleProductForm(form) {
@@ -195,21 +202,43 @@ class ProductForms {
         const addToCartButton = form.querySelector('.product-page__add-to-cart');
         if (addToCartButton) {
           if (matchingVariant.available) {
-            addToCartButton.textContent = 'Add to Cart';
+            // Restore original button structure with price
+            addToCartButton.innerHTML = '<span>Add to Cart</span><span>&nbsp;•&nbsp;</span><span class="cart-price"></span>';
+            
+            const priceSpan = addToCartButton.querySelector('.cart-price');
+            if (priceSpan) {
+              const quantityInput = form.querySelector('.quantity-input');
+              const quantity = parseInt(quantityInput?.value) || 1;
+              const totalPrice = matchingVariant.price * quantity;
+              const formattedPrice = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+              }).format(totalPrice / 100);
+              priceSpan.textContent = formattedPrice;
+            }
+            
             addToCartButton.disabled = false;
             addToCartButton.style.opacity = '1';
             addToCartButton.dataset.variantId = matchingVariant.id;
+            addToCartButton.dataset.price = matchingVariant.price;
           } else {
-            addToCartButton.textContent = 'Sold Out';
+            addToCartButton.innerHTML = '<span>Sold Out</span>';
             addToCartButton.disabled = true;
             addToCartButton.style.opacity = '0.5';
           }
         }
         
-        // Update price if needed
+        // Update main price display
         const priceElements = form.querySelectorAll('.product-page__price--regular, .product-page__price--sale');
         if (priceElements.length && matchingVariant.price) {
-          // Update price display logic here if needed
+          const formattedPrice = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }).format(matchingVariant.price / 100);
+          
+          priceElements.forEach(element => {
+            element.textContent = formattedPrice;
+          });
         }
       }
     } catch (error) {
@@ -262,6 +291,64 @@ class ProductForms {
     }
     
     quantityInput.value = currentQuantity;
+    
+    // Update price display
+    this.updateCartPrice(quantitySelector, currentQuantity);
+  }
+
+  handleQuantityInputChange(input) {
+    const quantitySelector = input.closest('.quantity-selector');
+    
+    if (!quantitySelector) {
+      console.warn('Quantity selector not found for input:', input);
+      return;
+    }
+    
+    let quantity = parseInt(input.value) || 1;
+    
+    // Ensure minimum quantity of 1
+    if (quantity < 1) {
+      quantity = 1;
+      input.value = quantity;
+    }
+    
+    // Update price display
+    this.updateCartPrice(quantitySelector, quantity);
+  }
+
+  updateCartPrice(quantitySelector, quantity) {
+    const addToCartRow = quantitySelector.closest('.product-page__add-to-cart-row');
+    if (!addToCartRow) return;
+    
+    const addToCartButton = addToCartRow.querySelector('.product-page__add-to-cart');
+    const priceElement = addToCartButton?.querySelector('.cart-price');
+    
+    if (!addToCartButton || !priceElement) return;
+    
+    const basePrice = parseFloat(addToCartButton.dataset.price) || 0;
+    const totalPrice = basePrice * quantity;
+    
+    // Format as money (simple version - adjust based on your currency settings)
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(totalPrice / 100); // Assuming price is in cents
+    
+    priceElement.textContent = formattedPrice;
+  }
+
+  updateCartPriceForVariant(addToCartButton, variantPrice, quantity) {
+    const priceElement = addToCartButton?.querySelector('.cart-price');
+    
+    if (!priceElement) return;
+    
+    const totalPrice = variantPrice * quantity;
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(totalPrice / 100);
+    
+    priceElement.textContent = formattedPrice;
   }
 
   handleGalleryThumbClick(thumb) {
@@ -322,21 +409,43 @@ class ProductForms {
         const addToCartButton = form.querySelector('.product-page__add-to-cart');
         if (addToCartButton) {
           if (matchingVariant.available) {
-            addToCartButton.textContent = 'Add to Cart';
+            // Restore original button structure with price
+            addToCartButton.innerHTML = '<span>Add to Cart</span><span>&nbsp;•&nbsp;</span><span class="cart-price"></span>';
+            
+            const priceSpan = addToCartButton.querySelector('.cart-price');
+            if (priceSpan) {
+              const quantityInput = form.querySelector('.quantity-input');
+              const quantity = parseInt(quantityInput?.value) || 1;
+              const totalPrice = matchingVariant.price * quantity;
+              const formattedPrice = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+              }).format(totalPrice / 100);
+              priceSpan.textContent = formattedPrice;
+            }
+            
             addToCartButton.disabled = false;
             addToCartButton.style.opacity = '1';
             addToCartButton.dataset.variantId = matchingVariant.id;
+            addToCartButton.dataset.price = matchingVariant.price;
           } else {
-            addToCartButton.textContent = 'Sold Out';
+            addToCartButton.innerHTML = '<span>Sold Out</span>';
             addToCartButton.disabled = true;
             addToCartButton.style.opacity = '0.5';
           }
         }
         
-        // Update price if needed
+        // Update main price display
         const priceElements = form.querySelectorAll('.product-page__price--regular, .product-page__price--sale');
         if (priceElements.length && matchingVariant.price) {
-          // Update price display logic here if needed
+          const formattedPrice = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }).format(matchingVariant.price / 100);
+          
+          priceElements.forEach(element => {
+            element.textContent = formattedPrice;
+          });
         }
       }
     } catch (error) {

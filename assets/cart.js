@@ -382,10 +382,15 @@ class CartManager {
       }
     }
 
-    // Update variant title if needed
-    const variantElement = itemElement.querySelector('.cart-item__variant');
-    if (variantElement) {
-      variantElement.textContent = itemData.variant_title || '';
+    // Update title to use variant title as main product name if available
+    const titleElement = itemElement.querySelector('.cart-item__title');
+    if (titleElement) {
+      const variantTitle = itemData.variant_title || itemData.variant?.title;
+      const productTitle = itemData.product_title || itemData.title;
+      const displayTitle = (variantTitle && variantTitle !== 'Default Title') 
+        ? variantTitle 
+        : productTitle;
+      titleElement.textContent = displayTitle;
     }
 
     // Note: We intentionally don't update the image to prevent reloading
@@ -396,20 +401,30 @@ class CartManager {
     itemElement.className = 'cart-item cart-item--entering';
     itemElement.dataset.itemKey = item.key;
     
+    // Debug: log item properties to see what CartJS provides
+    console.log('Cart item properties:', item);
+    
+    // Use variant title as product name if available, otherwise use product title
+    // CartJS uses different property names than Liquid
+    const variantTitle = item.variant_title || item.variant?.title;
+    const productTitle = item.product_title || item.title;
+    const displayTitle = (variantTitle && variantTitle !== 'Default Title') 
+      ? variantTitle 
+      : productTitle;
+    
     itemElement.innerHTML = `
       <div class="cart-item__image">
         <img src="${item.image}" alt="${item.title}" loading="lazy">
       </div>
       <div class="cart-item__details">
-        <h3 class="cart-item__title">${item.product_title}</h3>
-        ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="cart-item__variant">${item.variant_title}</p>` : ''}
+        <h4 class="cart-item__title">${displayTitle}</h4>
         <div class="cart-item__price-row">
-          <div class="cart-item__price">${this.formatMoney(item.final_price)}</div>
           <div class="cart-item__quantity">
             <button class="quantity-btn quantity-btn--minus" data-item-key="${item.key}" aria-label="Decrease quantity">-</button>
             <span class="quantity-display">${item.quantity}</span>
             <button class="quantity-btn quantity-btn--plus" data-item-key="${item.key}" aria-label="Increase quantity">+</button>
           </div>
+          <h5 class="cart-item__price">${this.formatMoney(item.final_price)}</h5>
         </div>
       </div>
     `;

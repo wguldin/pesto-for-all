@@ -54,26 +54,27 @@
         <form class="product-page__form" data-product-form="{{ product.id }}">
           {% if product.has_only_default_variant %}
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-            <div class="product-page__quantity">
-              <label for="quantity">Quantity</label>
+            <div class="product-page__add-to-cart-row">
               <div class="quantity-selector">
                 <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">
                 <button type="button" class="quantity-btn quantity-btn--plus" data-action="increase">+</button>
               </div>
+              <button 
+                type="submit" 
+                class="button button--primary product-page__add-to-cart"
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                data-price="{{ product.price }}"
+              >
+                <span>Add to Cart</span>
+                <span>&nbsp;•&nbsp;</span>
+                <span class="cart-price">{{ product.price | money }}</span>
+              </button>
             </div>
-            <button 
-              type="submit" 
-              class="button button--primary product-page__add-to-cart"
-              data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-            >
-              Add to Cart
-            </button>
           {% else %}
             <div class="product-page__variants">
               {% for option in product.options_with_values %}
                 <div class="product-page__option">
-                  <label class="product-page__option-label">{{ option.name }}</label>
                   <div class="product-page__option-pills" data-option-index="{{ forloop.index0 }}">
                     {% for value in option.values %}
                       {% assign variant_available = false %}
@@ -126,22 +127,23 @@
               }
             </script>
             
-            <div class="product-page__quantity">
-              <label for="quantity">Quantity</label>
+            <div class="product-page__add-to-cart-row">
               <div class="quantity-selector">
                 <button type="button" class="quantity-btn quantity-btn--minus" data-action="decrease">-</button>
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-input">
                 <button type="button" class="quantity-btn quantity-btn--plus" data-action="increase">+</button>
               </div>
+              <button 
+                type="submit" 
+                class="button button--primary product-page__add-to-cart"
+                data-product-id="{{ product.id }}"
+                data-price="{{ product.price }}"
+              >
+                <span>Add to Cart</span>
+                <span>&nbsp;•&nbsp;</span>
+                <span class="cart-price">{{ product.price | money }}</span>
+              </button>
             </div>
-            
-            <button 
-              type="submit" 
-              class="button button--primary product-page__add-to-cart"
-              data-product-id="{{ product.id }}"
-            >
-              Add to Cart
-            </button>
           {% endif %}
         </form>
       {% else %}
@@ -163,4 +165,4 @@
     }
   ]
 }
-{% endschema %} 
+{% endschema %}
