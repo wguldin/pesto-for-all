@@ -7,63 +7,74 @@ class CartManager {
     this.cartItems = document.getElementById('cart-items');
     this.cartOverlay = null;
     this.initialized = false;
+    this.maxRetries = 100; // Maximum retries (5 seconds)
+    this.retryCount = 0;
     
     // Wait for jQuery and CartJS to be available
     this.waitForDependencies();
   }
 
   waitForDependencies() {
-    const checkDependencies = () => {
-      if (typeof jQuery !== 'undefined' && typeof CartJS !== 'undefined') {
-        this.init();
-      } else {
-        setTimeout(checkDependencies, 50);
-      }
-    };
-    checkDependencies();
+    return new Promise((resolve, reject) => {
+      const checkDependencies = () => {
+        if (typeof jQuery !== 'undefined' && typeof CartJS !== 'undefined') {
+          this.init();
+          resolve();
+        } else if (this.retryCount >= this.maxRetries) {
+          console.error('CartManager: Dependencies (jQuery/CartJS) not loaded after 5 seconds');
+          reject(new Error('Dependencies not loaded'));
+        } else {
+          this.retryCount++;
+          setTimeout(checkDependencies, 50);
+        }
+      };
+      checkDependencies();
+    });
   }
 
   init() {
     if (this.initialized) return;
     this.initialized = true;
     
-    console.log('Initializing CartManager with CartJS...');
-    
-    this.createOverlay();
-    this.bindEvents();
-    this.initializeCartJS();
+    try {
+      this.createOverlay();
+      this.bindEvents();
+      this.initializeCartJS();
+    } catch (error) {
+      console.error('Error initializing CartManager:', error);
+    }
   }
 
   initializeCartJS() {
-    // Initialize Cart.js with proper cart data
-    const initialCartData = window.cartData || {
-      item_count: 0,
-      total_price: 0,
-      items: [],
-      attributes: {},
-      note: null,
-      currency: 'USD'
-    };
-
-    console.log('Initializing Cart.js with data:', initialCartData);
-    
-    CartJS.init(initialCartData, {
-      debug: true
-    });
-    
-    // Set up Cart.js event listeners
-    jQuery(document).on('cart.requestComplete', (event, cart) => {
-      console.log('Cart updated:', cart);
-      this.updateCart(cart);
-    });
-    
-    jQuery(document).on('cart.ready', (event, cart) => {
-      console.log('Cart ready:', cart);
-      this.updateCart(cart);
-    });
-    
-    // Update the cart UI with initial data
-    this.updateCart(initialCartData);
+    try {
+      // Initialize Cart.js with proper cart data
+      const initialCartData = window.cartData || {
+        item_count: 0,
+        total_price: 0,
+        items: [],
+        attributes: {},
+        note: null,
+        currency: 'USD'
+      };
+      
+      CartJS.init(initialCartData, {
+        debug: false
+      });
+      
+      // Set up Cart.js event listeners
+      jQuery(document).on('cart.requestComplete', (event, cart) => {
+        this.updateCart(cart);
+      });
+      
+      jQuery(document).on('cart.ready', (event, cart) => {
+        this.updateCart(cart);
+      });
+      
+      // Update the cart UI with initial data
+      this.updateCart(initialCartData);
+    } catch (error) {
+      console.error('Error initializing CartJS:', error);
+    }
   }
 
   createOverlay() {
@@ -162,13 +173,11 @@ class CartManager {
     const item = this.findCartItem(itemKey);
     
     if (!item) {
-      console.error('Cart item not found:', itemKey);
       return;
     }
 
     const quantityDisplay = item.querySelector('.quantity-display');
     if (!quantityDisplay) {
-      console.error('Quantity display not found in item:', item);
       return;
     }
 
@@ -314,9 +323,7 @@ class CartManager {
   ensureCartFooter(totalPrice) {
     // Footer is now in the HTML structure, just ensure it exists
     const footer = document.querySelector('.cart-flyout__footer');
-    if (!footer) {
-      console.warn('Cart footer not found in DOM');
-    }
+    // Footer should exist in HTML structure
   }
 
   updateCartSubtotal(totalPrice) {
@@ -401,8 +408,7 @@ class CartManager {
     itemElement.className = 'cart-item cart-item--entering';
     itemElement.dataset.itemKey = item.key;
     
-    // Debug: log item properties to see what CartJS provides
-    console.log('Cart item properties:', item);
+    // Use variant title as product name if available, otherwise use product title
     
     // Use variant title as product name if available, otherwise use product title
     // CartJS uses different property names than Liquid
@@ -567,7 +573,6 @@ if (document.readyState === 'loading') {
 }
 
 function initializeCart() {
-  console.log('Starting CartManager initialization...');
   window.cartManager = new CartManager();
 }
 

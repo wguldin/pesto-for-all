@@ -53,17 +53,15 @@ class ProductForms {
   }
 
   handleProductForm(form) {
-    console.log('Product form submitted:', form);
-    const formData = new FormData(form);
-    const variantId = formData.get('id');
-    const quantity = parseInt(formData.get('quantity')) || 1;
-    
-    console.log('Variant ID:', variantId, 'Quantity:', quantity);
-    
-    if (!variantId) {
-      console.error('No variant ID found');
-      return;
-    }
+    try {
+      const formData = new FormData(form);
+      const variantId = formData.get('id');
+      const quantity = parseInt(formData.get('quantity')) || 1;
+      
+      if (!variantId) {
+        console.error('No variant ID found');
+        return;
+      }
 
     // Check cart quantity limits before proceeding
     const currentCartTotal = this.getCurrentCartTotal();
@@ -79,42 +77,42 @@ class ProductForms {
       return;
     }
 
-    // Find and update the submit button
-    const submitButton = form.querySelector('button[type="submit"], .button');
-    const originalText = submitButton ? submitButton.textContent : '';
-    
-    console.log('Submit button found:', submitButton);
-    
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Adding...';
-    }
+      // Find and update the submit button
+      const submitButton = form.querySelector('button[type="submit"], .button');
+      const originalText = submitButton ? submitButton.textContent : '';
+      
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Adding...';
+      }
 
-    // Add to cart using the global addToCart function
-    if (window.addToCart) {
-      console.log('Adding to cart...');
-      try {
-        window.addToCart(variantId, quantity);
-        // Reset button state after a short delay to allow for UI updates
-        setTimeout(() => {
+      // Add to cart using the global addToCart function
+      if (window.addToCart) {
+        try {
+          window.addToCart(variantId, quantity);
+          // Reset button state after a short delay to allow for UI updates
+          setTimeout(() => {
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalText;
+            }
+          }, 500);
+        } catch (error) {
+          console.error('Error adding to cart:', error);
           if (submitButton) {
             submitButton.disabled = false;
             submitButton.textContent = originalText;
           }
-        }, 500);
-      } catch (error) {
-        console.error('Error adding to cart:', error);
+        }
+      } else {
+        console.error('Cart addToCart function not available');
         if (submitButton) {
           submitButton.disabled = false;
           submitButton.textContent = originalText;
         }
       }
-    } else {
-      console.error('Cart addToCart function not available');
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalText;
-      }
+    } catch (error) {
+      console.error('Error handling product form:', error);
     }
   }
 
