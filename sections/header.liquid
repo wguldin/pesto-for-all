@@ -59,26 +59,60 @@
     <div class="cart-flyout__content">
       <div class="cart-items" id="cart-items">
         {% if cart.item_count > 0 %}
+          {% comment %} First display featured products {% endcomment %}
           {% for item in cart.items %}
-            <div class="cart-item" data-item-key="{{ item.key }}">
-              <div class="cart-item__image">
-                <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
-              </div>
-              <div class="cart-item__details">
-                <h4 class="cart-item__title">{{ item.product.title }}</h4>
-                {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
-                  <p class="cart-item__variant">{{ item.variant.title }}</p>
-                {% endif %}
-                <div class="cart-item__price-row">
-                  <div class="cart-item__quantity">
-                    <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
-                    <span class="quantity-display">{{ item.quantity }}</span>
-                    <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+            {% if item.product.tags contains 'Featured' %}
+              <div class="cart-item" data-item-key="{{ item.key }}">
+                <div class="cart-item__image">
+                  <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
+                </div>
+                <div class="cart-item__details">
+                  <h4 class="cart-item__title">
+                    {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
+                      {{ item.variant.title }}
+                    {% else %}
+                      {{ item.product.title }}
+                    {% endif %}
+                  </h4>
+                  <div class="cart-item__price-row">
+                    <div class="cart-item__quantity">
+                      <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                      <span class="quantity-display">{{ item.quantity }}</span>
+                      <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                    </div>
+                    <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
                   </div>
-                  <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
                 </div>
               </div>
-            </div>
+            {% endif %}
+          {% endfor %}
+          
+          {% comment %} Then display non-featured products {% endcomment %}
+          {% for item in cart.items %}
+            {% unless item.product.tags contains 'Featured' %}
+              <div class="cart-item" data-item-key="{{ item.key }}">
+                <div class="cart-item__image">
+                  <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
+                </div>
+                <div class="cart-item__details">
+                  <h4 class="cart-item__title">
+                    {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
+                      {{ item.variant.title }}
+                    {% else %}
+                      {{ item.product.title }}
+                    {% endif %}
+                  </h4>
+                  <div class="cart-item__price-row">
+                    <div class="cart-item__quantity">
+                      <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                      <span class="quantity-display">{{ item.quantity }}</span>
+                      <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                    </div>
+                    <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
+                  </div>
+                </div>
+              </div>
+            {% endunless %}
           {% endfor %}
         
         {% else %}

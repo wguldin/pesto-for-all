@@ -45,7 +45,7 @@
       </div>
 
       {% if product.description != blank %}
-        <div class="product-page__description">
+        <div class="product-description">
           {{ product.description }}
         </div>
       {% endif %}
@@ -147,18 +147,6 @@
       {% else %}
         <div class="product-page__unavailable">
           <span class="product-page__sold-out">Sold Out</span>
-        </div>
-      {% endif %}
-
-      {% if product.vendor %}
-        <div class="product-page__vendor">
-          <span>Vendor: {{ product.vendor }}</span>
-        </div>
-      {% endif %}
-
-      {% if product.type %}
-        <div class="product-page__type">
-          <span>Type: {{ product.type }}</span>
         </div>
       {% endif %}
     </div>

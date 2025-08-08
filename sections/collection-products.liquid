@@ -28,10 +28,16 @@
         </div>
       {% endif %}
 
+      <div class="merch-section__header">
+        <h2 class="merch-section__title">Psst ... don't forget the merch!</h2>
+        <div class="merch-section__divider">
+          {% render 'divider'  %}
+        </div>
+      </div>
+
       <!-- Merch Section -->
       {% if non_featured_count > 0 %}
-        <div class="merch-section">
-          <h3 class="merch-section__title">Merch</h3>
+        <div>
           <div class="products-grid">
                         {% for product in collection.products %}
               {% unless product.tags contains 'Featured' %}

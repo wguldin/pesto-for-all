@@ -41,7 +41,7 @@
     </h3>
     
     {% if show_description and product.description != blank %}
-      <div class="{{ card_class }}__description">
+      <div class="product-description">
         {{ product.description }}
       </div>
     {% endif %}
@@ -53,12 +53,12 @@
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
             <button 
               type="submit" 
-              class="button {{ card_class }}__add-to-cart"
+              class="button add-to-cart"
               data-variant-id="{{ product.selected_or_first_available_variant.id }}"
             >
-              <span class="{{ card_class }}__button-text">Quick Add</span>
-              <span class="{{ card_class }}__button-bullet">•</span>
-              <span class="{{ card_class }}__button-price">
+              <span>Quick Add</span>
+              <span>&nbsp;•&nbsp;</span>
+              <span>
                 {% if product.compare_at_price > product.price %}
                   {{ product.price | money }}
                 {% else %}
@@ -69,7 +69,7 @@
           {% else %}
             <a 
               href="{{ product.url }}" 
-              class="button {{ card_class }}__get-started"
+              class="button"
             >
               Get Started
             </a>
