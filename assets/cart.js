@@ -1,19 +1,39 @@
+/**
+ * Cart Manager Class
+ * Manages cart functionality including add/remove items, quantity updates, and UI state
+ * @class CartManager
+ */
 class CartManager {
+  /**
+   * Initialize CartManager
+   */
   constructor() {
-    this.cartFlyout = document.getElementById('cart-flyout');
-    this.cartButton = document.querySelector('.nav__cart');
-    this.cartCloseButton = document.querySelector('.cart-flyout__close');
-    this.cartCount = document.getElementById('cart-count');
-    this.cartItems = document.getElementById('cart-items');
+    // DOM elements
+    this.cartFlyout = Utils.DOM.safeQuerySelector('#cart-flyout');
+    this.cartButton = Utils.DOM.safeQuerySelector('.nav__cart');
+    this.cartCloseButton = Utils.DOM.safeQuerySelector('.cart-flyout__close');
+    this.cartCount = Utils.DOM.safeQuerySelector('#cart-count');
+    this.cartItems = Utils.DOM.safeQuerySelector('#cart-items');
     this.cartOverlay = null;
+    
+    // State management
     this.initialized = false;
-    this.maxRetries = 100; // Maximum retries (5 seconds)
+    this.eventCleanupFunctions = [];
+    
+    // Configuration from global config
+    this.maxRetries = Config.get('cart.dependencyRetries', 100);
     this.retryCount = 0;
+    this.maxQuantity = Config.get('cart.maxQuantity', 50);
+    this.animationDuration = Config.get('cart.animationDuration', 400);
     
     // Wait for jQuery and CartJS to be available
     this.waitForDependencies();
   }
 
+  /**
+   * Wait for required dependencies (jQuery and CartJS) to load
+   * @returns {Promise} Resolves when dependencies are loaded
+   */
   waitForDependencies() {
     return new Promise((resolve, reject) => {
       const checkDependencies = () => {
@@ -21,17 +41,26 @@ class CartManager {
           this.init();
           resolve();
         } else if (this.retryCount >= this.maxRetries) {
-          console.error('CartManager: Dependencies (jQuery/CartJS) not loaded after 5 seconds');
-          reject(new Error('Dependencies not loaded'));
+          const error = ErrorHandler.createError(
+            'cart',
+            'Cart dependencies (jQuery/CartJS) failed to load',
+            'CART_DEPENDENCY_TIMEOUT',
+            { retryCount: this.retryCount, maxRetries: this.maxRetries }
+          );
+          ErrorHandler.handle(error);
+          reject(error);
         } else {
           this.retryCount++;
-          setTimeout(checkDependencies, 50);
+          setTimeout(checkDependencies, Config.get('cart.dependencyTimeout', 5000) / this.maxRetries);
         }
       };
       checkDependencies();
     });
   }
 
+  /**
+   * Initialize cart manager
+   */
   init() {
     if (this.initialized) return;
     this.initialized = true;
@@ -40,11 +69,25 @@ class CartManager {
       this.createOverlay();
       this.bindEvents();
       this.initializeCartJS();
+      
+      if (Config.debug.enabled) {
+        console.log('CartManager initialized successfully');
+      }
     } catch (error) {
-      console.error('Error initializing CartManager:', error);
+      const themeError = ErrorHandler.createError(
+        'cart',
+        'Failed to initialize cart manager',
+        'CART_INITIALIZATION_ERROR',
+        { originalError: error.message },
+        error
+      );
+      ErrorHandler.handle(themeError);
     }
   }
 
+  /**
+   * Initialize CartJS with configuration and event handlers
+   */
   initializeCartJS() {
     try {
       // Initialize Cart.js with proper cart data
@@ -54,43 +97,94 @@ class CartManager {
         items: [],
         attributes: {},
         note: null,
-        currency: 'USD'
+        currency: Config.get('formatting.currency', 'USD')
       };
       
       CartJS.init(initialCartData, {
-        debug: false
+        debug: Config.debug.cartEvents
       });
       
-      // Set up Cart.js event listeners
-      jQuery(document).on('cart.requestComplete', (event, cart) => {
+      // Set up Cart.js event listeners with cleanup tracking
+      const requestCompleteHandler = (event, cart) => {
         this.updateCart(cart);
-      });
+        if (Config.debug.cartEvents) {
+          console.log('Cart request completed:', cart);
+        }
+        Utils.Analytics.trackCart('cart_updated', { item_count: cart.item_count });
+      };
       
-      jQuery(document).on('cart.ready', (event, cart) => {
+      const readyHandler = (event, cart) => {
         this.updateCart(cart);
-      });
+        if (Config.debug.cartEvents) {
+          console.log('Cart ready:', cart);
+        }
+      };
+      
+      jQuery(document).on('cart.requestComplete', requestCompleteHandler);
+      jQuery(document).on('cart.ready', readyHandler);
+      
+      // Store cleanup functions
+      this.eventCleanupFunctions.push(
+        () => jQuery(document).off('cart.requestComplete', requestCompleteHandler),
+        () => jQuery(document).off('cart.ready', readyHandler)
+      );
       
       // Update the cart UI with initial data
       this.updateCart(initialCartData);
     } catch (error) {
-      console.error('Error initializing CartJS:', error);
+      const themeError = ErrorHandler.createError(
+        'cart',
+        'Failed to initialize CartJS',
+        'CART_DEPENDENCY_ERROR',
+        { originalError: error.message },
+        error
+      );
+      ErrorHandler.handle(themeError);
     }
   }
 
+  /**
+   * Create cart overlay for closing cart when clicking outside
+   */
   createOverlay() {
     this.cartOverlay = document.createElement('div');
     this.cartOverlay.className = 'cart-overlay';
-    this.cartOverlay.addEventListener('click', () => this.closeCart());
+    
+    const overlayClickHandler = () => this.closeCart();
+    this.cartOverlay.addEventListener('click', overlayClickHandler);
+    
+    // Store cleanup function
+    this.eventCleanupFunctions.push(
+      () => this.cartOverlay.removeEventListener('click', overlayClickHandler)
+    );
+    
     document.body.appendChild(this.cartOverlay);
   }
 
+  /**
+   * Bind event listeners with proper cleanup tracking
+   */
   bindEvents() {
-    // Cart open/close
-    this.cartButton?.addEventListener('click', () => this.openCart());
-    this.cartCloseButton?.addEventListener('click', () => this.closeCart());
+    // Cart open/close handlers
+    const openCartHandler = () => this.openCart();
+    const closeCartHandler = () => this.closeCart();
+    
+    if (this.cartButton) {
+      this.cartButton.addEventListener('click', openCartHandler);
+      this.eventCleanupFunctions.push(
+        () => this.cartButton.removeEventListener('click', openCartHandler)
+      );
+    }
+    
+    if (this.cartCloseButton) {
+      this.cartCloseButton.addEventListener('click', closeCartHandler);
+      this.eventCleanupFunctions.push(
+        () => this.cartCloseButton.removeEventListener('click', closeCartHandler)
+      );
+    }
     
     // Quantity buttons using event delegation
-    document.addEventListener('click', (e) => {
+    const quantityClickHandler = (e) => {
       if (e.target.classList.contains('quantity-btn--plus')) {
         this.animateButtonClick(e.target);
         this.updateQuantity(e.target.dataset.itemKey, 1);
@@ -98,72 +192,189 @@ class CartManager {
         this.animateButtonClick(e.target);
         this.updateQuantity(e.target.dataset.itemKey, -1);
       }
-    });
+    };
+    
+    document.addEventListener('click', quantityClickHandler);
+    this.eventCleanupFunctions.push(
+      () => document.removeEventListener('click', quantityClickHandler)
+    );
 
     // Close cart on escape key
-    document.addEventListener('keydown', (e) => {
+    const escapeHandler = (e) => {
       if (e.key === 'Escape' && this.isCartOpen()) {
         this.closeCart();
       }
-    });
+    };
+    
+    document.addEventListener('keydown', escapeHandler);
+    this.eventCleanupFunctions.push(
+      () => document.removeEventListener('keydown', escapeHandler)
+    );
   }
 
+  /**
+   * Open cart flyout with proper accessibility and analytics
+   */
   openCart() {
+    if (!this.cartFlyout) {
+      const error = ErrorHandler.createError(
+        'cart',
+        'Cart flyout element not found',
+        'CART_DOM_ERROR'
+      );
+      ErrorHandler.handle(error);
+      return;
+    }
+    
     this.cartFlyout.setAttribute('aria-hidden', 'false');
-    this.cartButton.setAttribute('aria-expanded', 'true');
-    this.cartOverlay.classList.add('is-visible');
+    
+    if (this.cartButton) {
+      this.cartButton.setAttribute('aria-expanded', 'true');
+    }
+    
+    if (this.cartOverlay) {
+      this.cartOverlay.classList.add('is-visible');
+    }
+    
     document.body.style.overflow = 'hidden';
+    
+    // Track cart opening
+    Utils.Analytics.trackCart('cart_opened');
+    
+    if (Config.debug.cartEvents) {
+      console.log('Cart opened');
+    }
   }
 
+  /**
+   * Close cart flyout with proper cleanup
+   */
   closeCart() {
+    if (!this.cartFlyout) return;
+    
     this.cartFlyout.setAttribute('aria-hidden', 'true');
-    this.cartButton.setAttribute('aria-expanded', 'false');
-    this.cartOverlay.classList.remove('is-visible');
+    
+    if (this.cartButton) {
+      this.cartButton.setAttribute('aria-expanded', 'false');
+    }
+    
+    if (this.cartOverlay) {
+      this.cartOverlay.classList.remove('is-visible');
+    }
+    
     document.body.style.overflow = '';
+    
+    if (Config.debug.cartEvents) {
+      console.log('Cart closed');
+    }
   }
 
   isCartOpen() {
     return this.cartFlyout.getAttribute('aria-hidden') === 'false';
   }
 
+  /**
+   * Add item to cart with validation and error handling
+   * @param {string|number} variantId - Product variant ID
+   * @param {number} quantity - Quantity to add (default: 1)
+   * @param {Object} properties - Additional item properties
+   * @returns {Promise} Promise that resolves when item is added
+   */
   async addToCart(variantId, quantity = 1, properties = {}) {
     try {
+      // Validate inputs
+      if (!variantId) {
+        throw ErrorHandler.createError(
+          'cart',
+          'Product variant ID is required',
+          'CART_VARIANT_NOT_FOUND',
+          { variantId, quantity, properties }
+        );
+      }
+      
+      quantity = Utils.Validate.quantity(quantity, 1, Config.get('cart.maxItemQuantity', 10));
+      
       // Check cart quantity limits before adding
       const currentCartTotal = this.getCurrentCartTotal();
       const newCartTotal = currentCartTotal + quantity;
+      const maxQuantity = Config.get('cart.maxQuantity', 50);
       
-      if (newCartTotal > 50) {
-        const maxAllowed = 50 - currentCartTotal;
-        if (maxAllowed <= 0) {
-          this.showNotification('Cart is full (50 item limit)', 'error');
-        } else {
-          this.showNotification(`Can only add ${maxAllowed} more item${maxAllowed !== 1 ? 's' : ''} (50 item limit)`, 'error');
-        }
-        throw new Error('Cart quantity limit exceeded');
+      if (newCartTotal > maxQuantity) {
+        const maxAllowed = maxQuantity - currentCartTotal;
+        const error = ErrorHandler.createError(
+          'cart',
+          `Cart limit exceeded. Maximum ${maxQuantity} items allowed.`,
+          maxAllowed <= 0 ? 'CART_QUANTITY_LIMIT' : 'CART_QUANTITY_LIMIT',
+          { currentTotal: currentCartTotal, attemptedQuantity: quantity, maxAllowed }
+        );
+        throw error;
       }
 
       // Use Cart.js addItem method
-      CartJS.addItem(variantId, quantity, properties, {
-        success: () => {
-          this.openCart();
-          // Removed success notification - cart opening and badge update provide sufficient feedback
-        },
-        error: (jqXHR, textStatus) => {
-          let errorMessage = 'Failed to add item to cart';
-          try {
-            const errorData = JSON.parse(jqXHR.responseText);
-            errorMessage = errorData.message || errorMessage;
-          } catch (e) {
-            // Use default error message
+      return new Promise((resolve, reject) => {
+        CartJS.addItem(variantId, quantity, properties, {
+          success: (data) => {
+            if (Config.get('cart.autoOpen', true)) {
+              this.openCart();
+            }
+            
+            // Track successful add to cart
+            Utils.Analytics.trackCart('add_to_cart', {
+              id: variantId,
+              quantity: quantity,
+              price: data.price || 0
+            });
+            
+            if (Config.debug.cartEvents) {
+              console.log('Item added to cart:', { variantId, quantity, properties });
+            }
+            
+            resolve(data);
+          },
+          error: (jqXHR) => {
+            let errorMessage = 'Failed to add item to cart';
+            let errorCode = 'CART_ADD_ERROR';
+            
+            try {
+              const errorData = JSON.parse(jqXHR.responseText);
+              errorMessage = errorData.message || errorMessage;
+              
+              // Map common Shopify error messages to codes
+              if (errorMessage.includes('not available') || errorMessage.includes('sold out')) {
+                errorCode = 'CART_ITEM_UNAVAILABLE';
+              } else if (errorMessage.includes('inventory')) {
+                errorCode = 'CART_INSUFFICIENT_INVENTORY';
+              }
+            } catch (e) {
+              // Use default error message
+            }
+            
+            const error = ErrorHandler.createError(
+              'cart',
+              errorMessage,
+              errorCode,
+              { variantId, quantity, properties, responseText: jqXHR.responseText }
+            );
+            
+            ErrorHandler.handle(error);
+            reject(error);
           }
-          this.showNotification(errorMessage, 'error');
-        }
+        });
       });
       
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      if (!error.message.includes('quantity limit')) {
-        this.showNotification(error.message || 'Failed to add item to cart', 'error');
+      // Handle errors that occurred before CartJS call
+      if (error instanceof ThemeError) {
+        ErrorHandler.handle(error);
+      } else {
+        const themeError = ErrorHandler.createError(
+          'cart',
+          error.message || 'Failed to add item to cart',
+          'CART_ADD_ERROR',
+          { variantId, quantity, properties },
+          error
+        );
+        ErrorHandler.handle(themeError);
       }
       throw error;
     }
@@ -324,6 +535,9 @@ class CartManager {
     // Footer is now in the HTML structure, just ensure it exists
     const footer = document.querySelector('.cart-flyout__footer');
     // Footer should exist in HTML structure
+    if (!footer) {
+      console.warn('Cart footer not found in HTML structure');
+    }
   }
 
   updateCartSubtotal(totalPrice) {
@@ -336,7 +550,7 @@ class CartManager {
 
   updateCartItemsIntelligently(newItems) {
     const existingItems = Array.from(this.cartItems.querySelectorAll('.cart-item'));
-    const existingKeys = existingItems.map(item => item.dataset.itemKey);
+    // const existingKeys = existingItems.map(item => item.dataset.itemKey);
     const newKeys = newItems.map(item => item.key);
 
     // Remove items that are no longer in the cart
@@ -347,7 +561,7 @@ class CartManager {
     });
 
     // Add or update items
-    newItems.forEach((item, index) => {
+    newItems.forEach((item) => {
       const existingItem = this.cartItems.querySelector(`[data-item-key="${item.key}"]`);
       
       if (existingItem) {
@@ -494,15 +708,26 @@ class CartManager {
     }
   }
 
+  /**
+   * Get current total quantity in cart
+   * @returns {number} Total quantity
+   */
   getCurrentCartTotal() {
-    // Get current total from DOM or CartJS
-    if (CartJS.cart && CartJS.cart.items) {
+    // Get current total from CartJS
+    if (typeof CartJS !== 'undefined' && CartJS.cart && CartJS.cart.items) {
       return CartJS.cart.items.reduce((total, item) => total + item.quantity, 0);
     }
     
-    // Fallback: count from DOM
+    // Fallback: count from cart badge
+    if (this.cartCount) {
+      const badgeCount = parseInt(this.cartCount.textContent) || 0;
+      if (badgeCount > 0) return badgeCount;
+    }
+    
+    // Final fallback: count from DOM
     let total = 0;
-    document.querySelectorAll('.cart-item .quantity-display').forEach(display => {
+    const displays = Utils.DOM.safeQuerySelectorAll('.cart-item .quantity-display');
+    displays.forEach(display => {
       total += parseInt(display.textContent) || 0;
     });
     return total;
@@ -518,50 +743,81 @@ class CartManager {
   }
 
 
+  /**
+   * Format money using configuration and utilities
+   * @param {number} cents - Price in cents
+   * @returns {string} Formatted price string
+   */
   formatMoney(cents) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(cents / 100);
+    return Utils.Format.money(
+      cents, 
+      Config.get('formatting.currency', 'USD'),
+      Config.get('formatting.locale', 'en-US')
+    );
   }
 
+  /**
+   * Show notification using utility system
+   * @param {string} message - Notification message
+   * @param {string} type - Notification type
+   */
   showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `cart-notification cart-notification--${type}`;
-    notification.textContent = message;
-    
-    // Style the notification
-    Object.assign(notification.style, {
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      padding: '1rem 1.5rem',
-      borderRadius: '0.5rem',
-      color: 'white',
-      fontWeight: '600',
-      zIndex: '10000',
-      transform: 'translateX(100%)',
-      transition: 'transform 0.3s ease',
-      backgroundColor: type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'
-    });
+    Utils.Notifications.show(
+      message, 
+      type, 
+      Config.get('notifications.duration', 3000)
+    );
+  }
 
-    document.body.appendChild(notification);
-
-    // Animate in
-    setTimeout(() => {
-      notification.style.transform = 'translateX(0)';
-    }, 100);
-
-    // Remove after 3 seconds
-    setTimeout(() => {
-      notification.style.transform = 'translateX(100%)';
-      setTimeout(() => {
-        if (document.body.contains(notification)) {
-          document.body.removeChild(notification);
+  /**
+   * Clean up event listeners and resources
+   */
+  cleanup() {
+    this.eventCleanupFunctions.forEach(cleanup => {
+      try {
+        cleanup();
+      } catch (error) {
+        if (Config.debug.enabled) {
+          console.warn('Error during cart cleanup:', error);
         }
-      }, 300);
-    }, 3000);
+      }
+    });
+    
+    this.eventCleanupFunctions = [];
+    this.initialized = false;
+    
+    if (Config.debug.enabled) {
+      console.log('CartManager cleaned up');
+    }
+  }
+}
+
+/**
+ * Initialize cart manager when DOM is ready
+ */
+function initializeCart() {
+  try {
+    window.cartManager = new CartManager();
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      if (window.cartManager && window.cartManager.cleanup) {
+        window.cartManager.cleanup();
+      }
+    });
+    
+    if (Config.debug.enabled) {
+      console.log('Cart initialization complete');
+    }
+  } catch (error) {
+    const themeError = ErrorHandler.createError(
+      'cart',
+      'Failed to initialize cart',
+      'CART_INITIALIZATION_ERROR',
+      {},
+      error
+    );
+    ErrorHandler.handle(themeError);
   }
 }
 
@@ -572,18 +828,27 @@ if (document.readyState === 'loading') {
   initializeCart();
 }
 
-function initializeCart() {
-  window.cartManager = new CartManager();
-}
-
 // Maintain backward compatibility
 window.Cart = CartManager;
 
-// Expose addToCart method globally for backward compatibility
+/**
+ * Global addToCart function for backward compatibility
+ * @param {string|number} variantId - Product variant ID
+ * @param {number} quantity - Quantity to add
+ * @param {Object} properties - Additional properties
+ * @returns {Promise} Promise that resolves when item is added
+ */
 window.addToCart = function(variantId, quantity = 1, properties = {}) {
-  if (window.cartManager) {
+  if (window.cartManager && window.cartManager.addToCart) {
     return window.cartManager.addToCart(variantId, quantity, properties);
   } else {
-    console.warn('CartManager not yet initialized');
+    const error = ErrorHandler.createError(
+      'cart',
+      'Cart manager not initialized',
+      'CART_NOT_INITIALIZED',
+      { variantId, quantity, properties }
+    );
+    ErrorHandler.handle(error, { showNotification: true });
+    return Promise.reject(error);
   }
 };

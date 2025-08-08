@@ -2,19 +2,18 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
-    'vitest-globals/env': true
+    node: true
   },
   extends: [
     'eslint:recommended'
-  ],
-  plugins: [
-    'vitest-globals'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
+  ignorePatterns: [
+    'assets/cartjs.min.js'  // External minified library
+  ],
   globals: {
     // Shopify globals
     Shopify: 'readonly',
@@ -29,7 +28,20 @@ module.exports = {
     blockTransitions: 'writable',
     mobileMenu: 'writable',
     
-    // Test globals (handled by vitest-globals plugin)
+    // New utilities and systems
+    Utils: 'writable',
+    Config: 'writable',
+    ErrorHandler: 'writable',
+    ThemeError: 'writable',
+    CartError: 'writable',
+    FormError: 'writable',
+    ModalError: 'writable',
+    APIError: 'writable',
+    
+    // Analytics globals
+    gtag: 'readonly',
+    
+    // Test globals
     describe: 'readonly',
     it: 'readonly',
     expect: 'readonly',

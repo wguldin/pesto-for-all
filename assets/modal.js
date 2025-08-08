@@ -65,7 +65,7 @@ class Modal {
 
       // Handle form submission
       if (this.form) {
-        this.form.addEventListener('submit', (e) => {
+        this.form.addEventListener('submit', () => {
           // Let the form submit normally
           // The success state will be handled by the page reload
           if (this.form.checkValidity()) {
@@ -132,7 +132,7 @@ class Modal {
 
 // Initialize modal when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  const waitlistModal = new Modal('waitlist-modal');
+  new Modal('waitlist-modal');
 });
 
 // Mobile Menu Manager
