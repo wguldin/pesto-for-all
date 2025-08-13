@@ -1,0 +1,204 @@
+<div class="block block--light-green" id="our-products">
+  <div class="block__text">
+    <h2 class="block__headline">
+      {% if section.settings.title != blank %}
+        {{ section.settings.title }}
+      {% else %}
+        Our Products
+      {% endif %}
+    </h2>
+    {% if section.settings.description != blank %}
+      <p>{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+  
+  <div class="homepage-products__grid">
+    {% if section.settings.collection != blank %}
+      {% assign products_collection = collections[section.settings.collection] %}
+    {% else %}
+      {% assign products_collection = collections.all %}
+    {% endif %}
+    
+    {% if products_collection.products.size > 0 %}
+      {% assign product_limit = section.settings.product_limit | default: 4 %}
+      {% for product in products_collection.products limit: product_limit %}
+        {% render 'product-card', 
+          product: product, 
+          image_size: '300x300', 
+          show_description: false, 
+          card_class: 'homepage-product-card' 
+        %}
+      {% endfor %}
+    {% else %}
+      <div class="homepage-products__empty">
+        <p>No products available. Collection: {{ section.settings.collection | default: 'all' }}</p>
+        <p>Total products: {{ collections.all.products.size }}</p>
+      </div>
+    {% endif %}
+  </div>
+  
+  {% if section.settings.show_view_all and products_collection.url %}
+    <div class="homepage-products__view-all">
+      <a href="{{ products_collection.url }}" class="button">
+        View All Products
+      </a>
+    </div>
+  {% endif %}
+  
+  {% render 'divider' %}
+</div>
+
+<style>
+.homepage-products__grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.homepage-product-card {
+  background: white;
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-green--light);
+  box-shadow: -0.5rem 0.5rem 0 0 var(--color-green--light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.homepage-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: -0.75rem 0.75rem 0 0 var(--color-green--light);
+}
+
+.homepage-product-card__image {
+  position: relative;
+  overflow: hidden;
+}
+
+.homepage-product-card__image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.homepage-product-card:hover .homepage-product-card__image img {
+  transform: scale(1.05);
+}
+
+.homepage-product-card__content {
+  padding: 1.5rem;
+}
+
+.homepage-product-card__title {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.homepage-product-card__title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.homepage-product-card__form .button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.homepage-products__view-all {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.homepage-products__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text);
+}
+
+@media (max-width: 768px) {
+  .homepage-products__grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .homepage-product-card__content {
+    padding: 1rem;
+  }
+  
+  .homepage-product-card__image img {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-products__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .homepage-product-card__image img {
+    height: 120px;
+  }
+  
+  .homepage-product-card__title {
+    font-size: 1rem;
+  }
+  
+  .homepage-product-card__form .button {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Homepage Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Our Products"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Product Collection",
+      "info": "Select the collection to display products from"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Number of Products to Show"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All Products' Button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage Products"
+    }
+  ]
+}
+{% endschema %}

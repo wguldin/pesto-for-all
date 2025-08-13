@@ -10,7 +10,7 @@ class ProductForms {
   bindEvents() {
     // Handle product form submissions
     document.addEventListener('submit', (e) => {
-      if (e.target.classList.contains('product-form') || e.target.classList.contains('product-page__form')) {
+      if (e.target.classList.contains('product-form') || e.target.classList.contains('product-page__form') || e.target.classList.contains('compact-add-to-cart')) {
         e.preventDefault();
         this.handleProductForm(e.target);
       }

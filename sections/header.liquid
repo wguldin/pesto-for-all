@@ -52,7 +52,7 @@
   <!-- Cart Flyout -->
   <div id="cart-flyout" class="cart-flyout" aria-hidden="true">
     <div class="cart-flyout__header">
-      <h2 class="cart-flyout__title">Your Cart</h2>
+      <h3 class="cart-flyout__title">Your Cart</h3>
       <button class="cart-flyout__close" aria-label="Close cart">&times;</button>
     </div>
     
@@ -80,7 +80,7 @@
                       <span class="quantity-display">{{ item.quantity }}</span>
                       <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
                     </div>
-                    <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
+                    <h5 class="cart-item__price">{{ item.final_line_price | money }}</h5>
                   </div>
                 </div>
               </div>
@@ -108,7 +108,7 @@
                       <span class="quantity-display">{{ item.quantity }}</span>
                       <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
                     </div>
-                    <h5 class="cart-item__price">{{ item.final_price | money }}</h5>
+                    <h5 class="cart-item__price">{{ item.final_line_price | money }}</h5>
                   </div>
                 </div>
               </div>

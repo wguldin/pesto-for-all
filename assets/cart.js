@@ -591,15 +591,14 @@ class CartManager {
       }
     }
 
-    // Update price with animation (in case of price changes)
+    // Update price with animation (should show line total, not unit price)
     const priceElement = itemElement.querySelector('.cart-item__price');
     if (priceElement) {
       const oldPrice = priceElement.textContent;
-      const newPrice = this.formatMoney(itemData.final_price);
+      const newPrice = this.formatMoney(itemData.final_line_price || itemData.final_price * itemData.quantity);
       
       if (oldPrice !== newPrice) {
         priceElement.textContent = newPrice;
-        this.animatePriceUpdate(priceElement);
       }
     }
 
@@ -644,7 +643,7 @@ class CartManager {
             <span class="quantity-display">${item.quantity}</span>
             <button class="quantity-btn quantity-btn--plus" data-item-key="${item.key}" aria-label="Increase quantity">+</button>
           </div>
-          <h5 class="cart-item__price">${this.formatMoney(item.final_price)}</h5>
+          <h5 class="cart-item__price">${this.formatMoney(item.final_line_price || item.final_price * item.quantity)}</h5>
         </div>
       </div>
     `;
