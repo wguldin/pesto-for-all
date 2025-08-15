@@ -76,6 +76,8 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'accessibility.css' | asset_url | stylesheet_tag }}
+    {{ 'advanced-accessibility.css' | asset_url | stylesheet_tag }}
     {{ 'style.css' | asset_url | stylesheet_tag }}
 
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500..700&display=swap" rel="stylesheet">
@@ -181,6 +183,8 @@
     <script src="{{ 'config.js' | asset_url }}"></script>
     <script src="{{ 'errors.js' | asset_url }}"></script>
     <script src="{{ 'utils.js' | asset_url }}"></script>
+    <script src="{{ 'accessibility.js' | asset_url }}"></script>
+    <script src="{{ 'advanced-accessibility.js' | asset_url }}"></script>
     <script src="{{ 'modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'block-transitions.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'cart.js' | asset_url }}"></script>

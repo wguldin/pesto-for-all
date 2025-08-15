@@ -1,0 +1,307 @@
+/* ===================================================================
+   ACCESSIBILITY ENHANCEMENTS FOR WCAG 2.0 AA COMPLIANCE
+   =================================================================== */
+
+/* Focus Management */
+.focus-visible {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus styles for better visibility */
+*:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+}
+
+/* Skip to content improvements */
+.skip-to-content-link {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100000;
+  background: var(--color-green--dark);
+  color: white;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  transition: top 0.3s ease;
+}
+
+.skip-to-content-link:focus {
+  top: 0;
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+/* Screen Reader Only Text */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Visually Hidden Accessibility Elements */
+.breadcrumb {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Hide fieldsets and legends visually while preserving semantics */
+.product-page__option fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.product-page__option legend {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text: #000000;
+    --color-green--dark: #000000;
+    --color-green--light: #ffffff;
+    --color-yellow: #ffff00;
+    --color-yellow--bg: #ffffff;
+  }
+  
+  .button {
+    border: 2px solid #000000;
+    background: #ffffff;
+    color: #000000;
+  }
+  
+  .button:focus {
+    outline: 4px solid #000000;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .product-gallery__main img,
+  .block__image,
+  .hero__image {
+    transition: none !important;
+  }
+}
+
+/* Focus management for interactive elements */
+.nav__link a:focus,
+.fancy-link:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+  background-color: rgba(123, 38, 24, 0.1);
+  border-radius: 4px;
+}
+
+/* Cart quantity buttons enhanced accessibility */
+.quantity-btn {
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid var(--color-green--dark);
+  background: var(--color-green--light);
+  color: var(--color-green--dark);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+  background: var(--color-yellow);
+}
+
+.quantity-btn:hover {
+  background: var(--color-green--dark);
+  color: white;
+}
+
+/* Modal focus trap styling */
+.modal.is-open .modal__container {
+  outline: none;
+}
+
+.modal__close:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+  background: var(--color-yellow);
+}
+
+/* Form error states */
+.field--error .field__input {
+  border-color: #d32f2f;
+  border-width: 2px;
+}
+
+.field--error .field__label {
+  color: #d32f2f;
+}
+
+.field__error {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Live region for announcements */
+.live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Enhanced mobile touch targets */
+@media (max-width: 768px) {
+  .nav__cart,
+  .nav__hamburger,
+  .quantity-btn,
+  .product-gallery__thumb,
+  .mobile-menu__close,
+  .cart-flyout__close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Cart accessibility improvements */
+.cart-item[data-removing="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.cart-item__title {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.cart-item__title:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+  background: rgba(123, 38, 24, 0.1);
+  border-radius: 4px;
+}
+
+/* Product page accessibility */
+.product-gallery__thumb:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+}
+
+.product-page__option-pill:focus {
+  outline: 3px solid var(--color-green--dark);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Notification accessibility */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 400px;
+  padding: 1rem 1.5rem;
+  background: var(--color-green--dark);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 100001;
+  font-weight: 600;
+}
+
+.notification--error {
+  background: #d32f2f;
+}
+
+.notification--success {
+  background: #388e3c;
+}
+
+/* Breadcrumb accessibility - visually hidden but available to screen readers */
+
+/* Table accessibility (if needed) */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem;
+  background: var(--color-light-green--bg);
+  border: 1px solid var(--color-green--dark);
+  font-weight: 600;
+}
+
+td {
+  padding: 0.75rem;
+  border: 1px solid var(--color-green--light);
+}
+
+/* Loading states accessibility */
+.loading {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--color-green--light);
+  border-top: 2px solid var(--color-green--dark);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -473,6 +473,11 @@ class CartManager {
   updateCart(cart) {
     this.updateCartCount(cart.item_count);
     this.updateCartContent(cart);
+    
+    // Accessibility announcement for cart updates
+    if (window.AccessibilityManager) {
+      window.AccessibilityManager.announce(`Cart updated. ${cart.item_count} item${cart.item_count !== 1 ? 's' : ''} in cart`, 'polite');
+    }
   }
 
   updateCartCount(count = null) {

@@ -1,0 +1,460 @@
+/* ===================================================================
+   ADVANCED ACCESSIBILITY - BEYOND WCAG 2.0
+   Next-generation inclusive design features
+   =================================================================== */
+
+/* WCAG 2.1 AAA Features */
+
+/* Enhanced focus modes */
+.focus-mode *:not(:focus):not(:focus *) {
+  transition: opacity 0.3s ease;
+}
+
+.focus-mode .nav,
+.focus-mode .footer,
+.focus-mode .hero {
+  opacity: 0.3;
+}
+
+/* Cognitive Accessibility Enhancements */
+
+/* Reading assistance */
+.pref-reading-aids .product-description {
+  line-height: 2;
+  font-size: 1.1em;
+  max-width: 60ch;
+}
+
+.pref-reading-aids p {
+  margin-bottom: 2rem;
+}
+
+.reading-time {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-green--light);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+/* Focus assistance */
+.pref-focus-assistance *:focus {
+  outline: 4px solid var(--color-yellow) !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 8px rgba(255, 255, 0, 0.3) !important;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Memory aids */
+.memory-assistance {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  max-width: 300px;
+  padding: 1rem;
+  background: var(--color-green--dark);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100002;
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Voice Control Optimization */
+
+/* Enhanced touch targets for voice users */
+.keyboard-user button,
+.keyboard-user a,
+.keyboard-user input,
+.keyboard-user select {
+  min-width: 48px;
+  min-height: 48px;
+  position: relative;
+}
+
+/* Voice command indicators (hidden by default) */
+[data-voice-command]::after {
+  content: "🎤";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 0.75rem;
+  background: var(--color-yellow);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-control-active [data-voice-command]::after {
+  display: flex;
+}
+
+/* Phonetic pronunciation hints */
+[aria-keyshortcuts*="Say"]::before {
+  content: attr(aria-keyshortcuts);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-green--dark);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+
+[aria-keyshortcuts*="Say"]:hover::before,
+[aria-keyshortcuts*="Say"]:focus::before {
+  opacity: 1;
+}
+
+/* Advanced Screen Reader Support */
+
+/* Enhanced table support */
+table[aria-label] {
+  border: 2px solid var(--color-green--dark);
+}
+
+table[aria-label] caption {
+  padding: 0.5rem;
+  font-weight: bold;
+  background: var(--color-light-green--bg);
+}
+
+/* Content structure indicators */
+.page-summary {
+  padding: 1rem;
+  background: var(--color-light-green--bg);
+  border-left: 4px solid var(--color-green--dark);
+  margin-bottom: 2rem;
+}
+
+.content-summary {
+  font-style: italic;
+  color: var(--color-green--dark);
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: rgba(123, 38, 24, 0.1);
+  border-radius: 4px;
+}
+
+/* Personalization Features */
+
+/* High contrast preference */
+.pref-high-contrast {
+  --color-text: #000000;
+  --color-green--dark: #000000;
+  --color-green--light: #ffffff;
+  --color-yellow: #ffff00;
+  --color-yellow--bg: #ffffff;
+  background: #ffffff !important;
+}
+
+.pref-high-contrast .button {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+.pref-high-contrast .button:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Large text preference */
+.pref-large-text {
+  font-size: 120% !important;
+}
+
+.pref-large-text .button {
+  font-size: 1.4rem !important;
+  padding: 1.2rem 2rem !important;
+}
+
+.pref-large-text .nav {
+  font-size: 1.2rem !important;
+}
+
+/* Reduced motion preference (enhanced) */
+.pref-reduced-motion *,
+.pref-reduced-motion *::before,
+.pref-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+  transform: none !important;
+}
+
+/* Keyboard User Enhancements */
+
+.keyboard-user .skip-to-content-link {
+  position: fixed !important;
+  top: 20px !important;
+  left: 20px !important;
+  z-index: 100003 !important;
+  background: var(--color-yellow) !important;
+  color: var(--color-green--dark) !important;
+  padding: 1rem 2rem !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.keyboard-user .nav__link a,
+.keyboard-user .fancy-link {
+  outline-offset: 4px;
+}
+
+.keyboard-user .product-page__option-pill {
+  margin: 0.25rem;
+  outline-offset: 3px;
+}
+
+/* Keyboard shortcuts indicator */
+.keyboard-user::before {
+  content: "Keyboard shortcuts: Alt+C (Cart), Alt+S (Shop), Alt+H (Home)";
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--color-green--dark);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  z-index: 100002;
+  max-width: 200px;
+  line-height: 1.3;
+}
+
+/* Slow Interaction Support */
+
+.slow-interaction-user .button {
+  transition: all 0.5s ease !important;
+}
+
+.slow-interaction-user .quantity-btn {
+  transition: all 0.3s ease !important;
+}
+
+/* Extended hover states for slow interaction users */
+.slow-interaction-user .nav__link:hover,
+.slow-interaction-user .button:hover {
+  transform: scale(1.05);
+  transition: transform 0.5s ease;
+}
+
+/* Timeout warnings */
+.timeout-warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f44336;
+  color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 100004;
+  text-align: center;
+  max-width: 400px;
+  animation: pulseWarning 1s infinite;
+}
+
+@keyframes pulseWarning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* AI-Powered Features */
+
+/* Smart content descriptions */
+.smart-description {
+  background: var(--color-light-green--bg);
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  font-style: italic;
+}
+
+/* Predictive accessibility hints */
+.accessibility-tip {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  max-width: 300px;
+  padding: 1rem;
+  background: var(--color-yellow);
+  color: var(--color-green--dark);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 100003;
+  animation: bounceIn 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Advanced Form Enhancements */
+
+/* Enhanced error states */
+.field--error .field__input {
+  border: 3px solid #d32f2f !important;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.field--error .field__error {
+  background: #d32f2f;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.field--error .field__error::before {
+  content: "⚠️ ";
+}
+
+/* Form progress indicators */
+.form-progress {
+  background: var(--color-light-green--bg);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Confirmation dialogs for slow interaction users */
+.slow-interaction-user .destructive-action::before {
+  content: "⚠️ This action requires confirmation";
+  display: block;
+  background: #ff9800;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile Accessibility Enhancements */
+
+@media (max-width: 768px) {
+  /* Larger touch targets */
+  .keyboard-user button,
+  .keyboard-user a,
+  .keyboard-user .quantity-btn {
+    min-width: 52px;
+    min-height: 52px;
+  }
+  
+  /* Easier thumb navigation */
+  .keyboard-user .nav__cart {
+    bottom: 20px;
+    right: 20px;
+    position: fixed;
+    z-index: 100001;
+  }
+  
+  /* Mobile keyboard shortcuts */
+  .keyboard-user .mobile-shortcuts {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background: var(--color-green--dark);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    z-index: 100002;
+  }
+}
+
+/* Advanced Color and Contrast */
+
+/* Multiple contrast options */
+.contrast-level-1 {
+  filter: contrast(150%);
+}
+
+.contrast-level-2 {
+  filter: contrast(200%);
+}
+
+.contrast-level-3 {
+  filter: contrast(300%) saturate(0%);
+}
+
+/* Color blind friendly alternatives */
+.colorblind-friendly .button {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.1) 2px,
+    rgba(255,255,255,0.1) 4px
+  );
+}
+
+/* Debugging and Development */
+
+.accessibility-debug .sr-only {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0.25rem 0.5rem !important;
+  margin: 0.25rem !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  border: 1px dashed #ff0000 !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+  color: #ff0000 !important;
+  font-size: 0.75rem !important;
+}
+
+.accessibility-debug [aria-hidden="true"] {
+  outline: 2px dashed #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.accessibility-debug [role] {
+  outline: 2px solid #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}

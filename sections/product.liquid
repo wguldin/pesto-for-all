@@ -1,3 +1,5 @@
+{% render 'breadcrumbs' %}
+
 <div class="product-page">
   <div class="product-page__container">
     <div class="product-page__gallery">
@@ -95,7 +97,9 @@
             <div class="product-page__variants">
               {% for option in product.options_with_values %}
                 <div class="product-page__option">
-                  <div class="product-page__option-pills" data-option-index="{{ forloop.index0 }}">
+                  <fieldset>
+                    <legend class="product-page__option-label">{{ option.name }}</legend>
+                    <div class="product-page__option-pills" role="radiogroup" aria-labelledby="option-{{ forloop.index0 }}-label" data-option-index="{{ forloop.index0 }}">
                     {% for value in option.values %}
                       {% assign variant_available = false %}
                       {% assign variant_image = null %}
@@ -115,13 +119,20 @@
                         data-option-value="{{ value | escape }}"
                         data-available="{{ variant_available }}"
                         data-variant-image="{% if variant_image %}{{ variant_image | image_url: width: 800, height: 800 }}{% endif %}"
-                        {% unless variant_available %}disabled{% endunless %}
+                        role="radio"
+                        aria-checked="{% if option.selected_value == value %}true{% else %}false{% endif %}"
+                        aria-describedby="option-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}-status"
+                        {% unless variant_available %}disabled aria-disabled="true"{% endunless %}
                       >
                         {{ value }}
+                        <span id="option-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}-status" class="sr-only">
+                          {% if variant_available %}Available{% else %}Sold out{% endif %}
+                        </span>
                       </button>
                     {% endfor %}
-                  </div>
-                  <input type="hidden" name="options[{{ option.name | escape }}]" value="{{ option.selected_value }}" data-option-index="{{ forloop.index0 }}">
+                    </div>
+                    <input type="hidden" name="options[{{ option.name | escape }}]" value="{{ option.selected_value }}" data-option-index="{{ forloop.index0 }}">
+                  </fieldset>
                 </div>
               {% endfor %}
             </div>
