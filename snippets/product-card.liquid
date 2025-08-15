@@ -19,17 +19,29 @@
       {% assign width = image_size | split: 'x' | first %}
       {% assign height = image_size | split: 'x' | last %}
       <img 
+        srcset="{{ product.featured_image | image_url: width: 300, height: 300 }} 300w,
+                {{ product.featured_image | image_url: width: 400, height: 400 }} 400w,
+                {{ product.featured_image | image_url: width: 600, height: 600 }} 600w,
+                {{ product.featured_image | image_url: width: 800, height: 800 }} 800w"
+        sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 300px"
         src="{{ product.featured_image | image_url: width: width, height: height }}" 
         alt="{{ product.title }}"
         loading="{% if show_description %}eager{% else %}lazy{% endif %}"
         class="{{ card_class }}__image--primary"
+        style="aspect-ratio: 1 / 1"
       >
       {% if product.images.size > 1 %}
         <img 
+          srcset="{{ product.images[1] | image_url: width: 300, height: 300 }} 300w,
+                  {{ product.images[1] | image_url: width: 400, height: 400 }} 400w,
+                  {{ product.images[1] | image_url: width: 600, height: 600 }} 600w,
+                  {{ product.images[1] | image_url: width: 800, height: 800 }} 800w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 300px"
           src="{{ product.images[1] | image_url: width: width, height: height }}" 
           alt="{{ product.title }}"
           loading="lazy"
           class="{{ card_class }}__image--secondary"
+          style="aspect-ratio: 1 / 1"
         >
       {% endif %}
     </a>

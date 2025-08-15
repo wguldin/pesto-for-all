@@ -48,7 +48,7 @@
                 {% if product.has_only_default_variant %}
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                   <button type="submit" class="button button--small" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-                    <span>Add to Cart</span>
+                    <span>Quick Add</span>
                     <span class="compact-product-card__button-bullet">&nbsp;•&nbsp;</span>
                     <span>
                       {% if product.compare_at_price > product.price %}
@@ -123,7 +123,7 @@
                 {% if product.has_only_default_variant %}
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                   <button type="submit" class="button button--small" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-                    <span>Add to Cart</span>
+                    <span>Quick Add</span>
                     <span class="compact-product-card__button-bullet">&nbsp;•&nbsp;</span>
                     <span>
                       {% if product.compare_at_price > product.price %}

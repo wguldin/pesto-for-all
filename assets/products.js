@@ -246,8 +246,38 @@ class ProductForms {
 
   updateMainImage(imageUrl) {
     const mainImage = document.getElementById('product-main-image');
+    const placeholder = document.getElementById('product-main-image-placeholder');
+    
     if (mainImage && imageUrl) {
+      // Update placeholder with low-res version
+      const lowResSrc = imageUrl.replace(/width=\d+[^&]*&height=\d+[^&]*/, 'width=50&height=50');
+      if (placeholder) {
+        placeholder.src = lowResSrc;
+        placeholder.style.opacity = '1';
+      }
+      
+      // Hide main image while loading
+      mainImage.style.opacity = '0';
+      
+      // Create new srcset based on the imageUrl pattern
+      const baseSrc = imageUrl.replace(/width=\d+[^&]*&height=\d+[^&]*/, '');
+      const newSrcset = [
+        `${baseSrc}width=400&height=400 400w`,
+        `${baseSrc}width=600&height=600 600w`,
+        `${baseSrc}width=800&height=800 800w`,
+        `${baseSrc}width=1200&height=1200 1200w`
+      ].join(', ');
+      
+      mainImage.srcset = newSrcset;
       mainImage.src = imageUrl;
+      
+      // Show main image and hide placeholder when loaded
+      mainImage.onload = () => {
+        mainImage.style.opacity = '1';
+        if (placeholder) {
+          placeholder.style.opacity = '0';
+        }
+      };
       
       // Update thumbnail active states to match
       this.updateThumbnailActiveState(imageUrl);
@@ -351,10 +381,10 @@ class ProductForms {
 
   handleGalleryThumbClick(thumb) {
     const imageUrl = thumb.dataset.imageUrl;
-    const mainImage = document.getElementById('product-main-image');
     
-    if (mainImage && imageUrl) {
-      mainImage.src = imageUrl;
+    if (imageUrl) {
+      // Use the updateMainImage method which handles progressive loading
+      this.updateMainImage(imageUrl);
       
       // Update active state
       document.querySelectorAll('.product-gallery__thumb').forEach(t => t.classList.remove('product-gallery__thumb--active'));

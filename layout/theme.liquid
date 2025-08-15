@@ -27,6 +27,20 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="{% if settings.password_page_enabled %}noindex,nofollow{% else %}index,follow{% endif %}">
+    {% if template contains 'product' and product.tags.size > 0 %}
+      <meta name="keywords" content="{{ product.tags | join: ', ' | escape }}">
+    {% endif %}
+    
+    <!-- Language and Region -->
+    <meta name="language" content="{{ request.locale.iso_code }}">
+    <meta name="geo.region" content="{{ localization.country.iso_code }}">
+    
+    <!-- Preload critical resources -->
+    <link rel="dns-prefetch" href="//cdn.shopify.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    
     {% render 'meta-tags' %}
     
     {{ content_for_header }}
