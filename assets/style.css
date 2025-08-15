@@ -1,3 +1,43 @@
+.divider {
+  grid-column: 1 / span 5;
+  border: 0;
+  margin: 0;
+  grid-row: 2;
+  align-self: end;
+  position: relative;
+  top: .7rem;
+  z-index: 100000;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.divider hr:first-child, .divider hr:last-child {
+  margin: 0;
+  border: 0;
+  height: 12px;
+  position: relative;
+  -webkit-mask-image: url("{{ 'border.svg' | asset_url }}");
+  mask-image: url("{{ 'border.svg' | asset_url }}");
+}
+
+.divider hr:first-child {
+  background-color: var(--color-green--dark);
+  top: 8px;
+}
+
+.divider hr:last-child {
+  background-color: var(--color-green--light);
+  top: -8px;
+}
+
+.block--green .divider {
+  grid-column: 7 / span 5;
+}
+
+.divider-container--background-green {
+  background-color: var(--color-light-green--bg);
+}
+
 /* Navigation */
 .nav {
   display: flex;
@@ -1983,11 +2023,12 @@
 .homepage-products-block {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1.5rem;
-  padding: 0 4.5rem 0;
+  gap: 2.4rem;
+  padding: 2.4rem 4.5rem 2rem;
   opacity: 0;
   transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
               transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--color-light-green--bg);
 }
 
 .homepage-products-block.is-visible {
@@ -2003,7 +2044,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-bottom: 2rem;
 }
 
 .compact-product-card {
@@ -2067,9 +2107,10 @@
 
 .compact-product-card__title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.2;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .compact-product-card__title a {
@@ -2085,7 +2126,7 @@
 .compact-add-to-cart .button {
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2103,11 +2144,6 @@
   grid-column: 2 / span 10;
   text-align: center;
   margin-top: 1rem;
-}
-
-.divider-container--full-width {
-  padding: 0 4.5rem;
-  margin: 2rem 0;
 }
 
 .homepage-products-empty {
@@ -2149,10 +2185,6 @@
   .homepage-products__headline {
     font-size: 2rem;
     margin-bottom: 1.5rem;
-  }
-  
-  .divider-container--full-width {
-    padding: 0 3rem;
   }
   
   .homepage-products-compact {
