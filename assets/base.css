@@ -90,7 +90,7 @@ a:hover {
   margin-bottom: 5rem;
   transition: all 0.2s ease-in-out;
   border: 3px solid rgba(38, 84, 40, 0.2);
-  cursor: pointer;
+  cursor: pointer !important;
   position: relative;
   overflow: hidden;
   text-align: center;
@@ -110,6 +110,10 @@ a:hover {
 }
 
 .button:focus {
+  outline: none;
+}
+
+.button:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--color-green--dark);
 }

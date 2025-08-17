@@ -10,24 +10,22 @@
       {% comment %} First display featured products {% endcomment %}
       {% for product in collections['all'].products %}
         {% if product.tags contains 'Featured' and forloop.index <= 4 %}
-        <div class="compact-product-card">
+        <div class="compact-product-card" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}">
           <div class="compact-product-card__image">
-            <a href="{{ product.url }}">
+            <img 
+              src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+              alt="{{ product.title }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              class="compact-product-card__image--primary"
+            >
+            {% if product.images.size > 1 %}
               <img 
-                src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+                src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
                 alt="{{ product.title }}"
-                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                class="compact-product-card__image--primary"
+                loading="lazy"
+                class="compact-product-card__image--secondary"
               >
-              {% if product.images.size > 1 %}
-                <img 
-                  src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
-                  alt="{{ product.title }}"
-                  loading="lazy"
-                  class="compact-product-card__image--secondary"
-                >
-              {% endif %}
-            </a>
+            {% endif %}
           </div>
           <div class="compact-product-card__content">
             <h3 class="compact-product-card__title">
@@ -85,24 +83,22 @@
           {% unless product.tags contains 'Featured' %}
             {% if shown_count < remaining_slots %}
               {% assign shown_count = shown_count | plus: 1 %}
-        <div class="compact-product-card">
+        <div class="compact-product-card" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}">
           <div class="compact-product-card__image">
-            <a href="{{ product.url }}">
+            <img 
+              src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+              alt="{{ product.title }}"
+              loading="lazy"
+              class="compact-product-card__image--primary"
+            >
+            {% if product.images.size > 1 %}
               <img 
-                src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+                src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
                 alt="{{ product.title }}"
                 loading="lazy"
-                class="compact-product-card__image--primary"
+                class="compact-product-card__image--secondary"
               >
-              {% if product.images.size > 1 %}
-                <img 
-                  src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
-                  alt="{{ product.title }}"
-                  loading="lazy"
-                  class="compact-product-card__image--secondary"
-                >
-              {% endif %}
-            </a>
+            {% endif %}
           </div>
           <div class="compact-product-card__content">
             <h3 class="compact-product-card__title">
