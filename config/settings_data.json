@@ -1,0 +1,101 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_width": 100
+        }
+      },
+      "recipes": {
+        "type": "recipes",
+        "blocks": {
+          "recipe_rePE4L": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Summer-in-winter Chicken",
+              "recipe_content": "<p>Will and I first made this recipe when we were dating as a weekend special meal. </p><p>This recipe is simple, but checks the box of satisfying, but not time consuming. </p><p>Originally, we swapped out the crème fraîche for sour cream, but if you can splurge for the crème fraîche it really does elevate this dish.</p>",
+              "recipe_link": ""
+            }
+          },
+          "recipe_DLnL6J": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Pesto Toast",
+              "recipe_content": "<p>If you have tried our pesto at the local farmer's market you likely know about pesto toast!</p><p>Just toast your favorite bread and spread pesto on top.</p>",
+              "recipe_link": ""
+            }
+          },
+          "recipe_zXzzAX": {
+            "type": "recipe",
+            "settings": {
+              "recipe_image": "shopify://shop_images/IMG_6808_Large_ff24ef9c-c4e2-45f0-b2f6-4485d78d8f39.jpg",
+              "recipe_title": "Prue Leith's Pesto Palmiers",
+              "recipe_content": "<p>Will and I stumbled on this recipe while watching <em>Prue Leith's Cotswold Kitchen</em>.<br/> <br/>This recipe couldn't be easier to make and can serve as a great appetizer. It does require a little planning due the thaw and chill again instructions.<br/><br/><em>Note: We excluded the egg and parmesan from the recipe.</em></p>",
+              "recipe_link": "https://prue-leith.com/pesto-palmiers/"
+            }
+          },
+          "recipe_fqPaq8": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Pasta",
+              "recipe_content": "<p>Step 1: Choose your favorite pasta.</p><p>Step 2: Cook the pasta al dente. </p><p>Step 3: Add pesto.</p><p>Step 4: Enjoy!</p>",
+              "recipe_link": ""
+            }
+          },
+          "recipe_8wyFR7": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Roasted potatoes",
+              "recipe_content": "<p>After roasting potatoes in the oven just drizzle pesto over the top and enjoy!</p>",
+              "recipe_link": ""
+            }
+          },
+          "recipe_LKTamh": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Caprese Salad",
+              "recipe_content": "<p>This is a slightly different take on a Caprese salad. Layer your fresh tomatoes and mozzarella then add pesto on top.</p>",
+              "recipe_link": ""
+            }
+          },
+          "recipe_Bey9dd": {
+            "type": "recipe",
+            "settings": {
+              "recipe_title": "Pizza",
+              "recipe_content": "<p>Pesto pizza is one of our family's go-to recipes for dinner. We simply swap out the red sauce for pesto as a base layer and then add toppings. Our favorite toppings for this pizza are Kalamata olives, red onion, feta and if you are an omnivore, a little chicken and Italian sausage.\n\nBelow are a couple recipes for pizza doughs we use:\n\nMake your own dough (if you have time to spare)\nI need a dough 5 minutes ago recipe</p>",
+              "recipe_link": ""
+            }
+          }
+        },
+        "block_order": [
+          "recipe_rePE4L",
+          "recipe_DLnL6J",
+          "recipe_zXzzAX",
+          "recipe_fqPaq8",
+          "recipe_8wyFR7",
+          "recipe_LKTamh",
+          "recipe_Bey9dd"
+        ],
+        "settings": {
+          "title": "Our Favorite Pesto Recipes",
+          "description": "Discover delicious ways to enjoy our homemade pesto"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      }
+    },
+    "content_for_index": []
+  }
+}
