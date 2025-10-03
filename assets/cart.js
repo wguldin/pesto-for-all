@@ -488,6 +488,7 @@ class CartManager {
     if (this.cartCount) {
       const oldCount = parseInt(this.cartCount.textContent) || 0;
       this.cartCount.textContent = count;
+      this.cartCount.setAttribute('data-count', count);
       this.cartCount.style.display = count > 0 ? 'flex' : 'none';
       
       // Animate cart badge if count changed
