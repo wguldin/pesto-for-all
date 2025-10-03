@@ -1,62 +1,93 @@
 class Modal {
   constructor(modalId) {
-    this.modal = document.getElementById(modalId);
-    this.overlay = this.modal.querySelector('.modal__overlay');
-    this.container = this.modal.querySelector('.modal__container');
-    this.closeButtons = this.modal.querySelectorAll('[data-modal-close]');
-    this.openButtons = document.querySelectorAll(`[data-modal-open="${modalId}"]`);
-    this.form = this.modal.querySelector('form');
-    this.formContent = this.modal.querySelector('.modal__form-content');
-    this.successContent = this.modal.querySelector('.modal__success-content');
-    
-    console.log('Modal initialized with elements:', {
-      modal: this.modal,
-      form: this.form,
-      formContent: this.formContent,
-      successContent: this.successContent
-    });
-    
-    this.init();
+    try {
+      this.modal = document.getElementById(modalId);
+      if (!this.modal) {
+        throw new Error(`Modal with ID "${modalId}" not found`);
+      }
+      
+      this.overlay = this.modal.querySelector('.modal__overlay');
+      this.container = this.modal.querySelector('.modal__container');
+      this.closeButtons = this.modal.querySelectorAll('[data-modal-close]');
+      this.openButtons = document.querySelectorAll(`[data-modal-open="${modalId}"]`);
+      this.form = this.modal.querySelector('form');
+      this.formContent = this.modal.querySelector('.modal__form-content');
+      this.successContent = this.modal.querySelector('.modal__success-content');
+      
+      this.init();
+    } catch (error) {
+      console.error('Error initializing modal:', error);
+    }
   }
 
   init() {
-    // Add event listeners
-    this.closeButtons.forEach(button => {
-      button.addEventListener('click', () => this.close());
-    });
-
-    this.openButtons.forEach(button => {
-      button.addEventListener('click', () => this.open());
-    });
-
-    // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modal.classList.contains('is-open')) {
-        this.close();
-      }
-    });
-
-    // Close on overlay click, but not on container click
-    this.overlay.addEventListener('click', (e) => {
-      if (e.target === this.overlay) {
-        this.close();
-      }
-    });
-
-    // Prevent click propagation on container
-    this.container.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    // Handle form submission
-    if (this.form) {
-      this.form.addEventListener('submit', (e) => {
-        // Let the form submit normally
-        // The success state will be handled by the page reload
-        if (this.form.checkValidity()) {
-          this.showSuccess();
-        }
+    if (!this.modal) return;
+    
+    try {
+      // Add event listeners
+      this.closeButtons.forEach(button => {
+        button.addEventListener('click', () => this.close());
       });
+
+      this.openButtons.forEach(button => {
+        button.addEventListener('click', () => this.open());
+      });
+
+      // Store bound functions for cleanup
+      this.boundEscapeHandler = (e) => {
+        if (e.key === 'Escape' && this.modal.classList.contains('is-open')) {
+          this.close();
+        }
+      };
+
+      this.boundOverlayHandler = (e) => {
+        if (e.target === this.overlay) {
+          this.close();
+        }
+      };
+
+      this.boundContainerHandler = (e) => {
+        e.stopPropagation();
+      };
+
+      // Close on escape key
+      document.addEventListener('keydown', this.boundEscapeHandler);
+
+      // Close on overlay click, but not on container click
+      if (this.overlay) {
+        this.overlay.addEventListener('click', this.boundOverlayHandler);
+      }
+
+      // Prevent click propagation on container
+      if (this.container) {
+        this.container.addEventListener('click', this.boundContainerHandler);
+      }
+
+      // Handle form submission
+      if (this.form) {
+        this.form.addEventListener('submit', () => {
+          // Let the form submit normally
+          // The success state will be handled by the page reload
+          if (this.form.checkValidity()) {
+            this.showSuccess();
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error setting up modal event listeners:', error);
+    }
+  }
+
+  cleanup() {
+    // Clean up event listeners to prevent memory leaks
+    if (this.boundEscapeHandler) {
+      document.removeEventListener('keydown', this.boundEscapeHandler);
+    }
+    if (this.overlay && this.boundOverlayHandler) {
+      this.overlay.removeEventListener('click', this.boundOverlayHandler);
+    }
+    if (this.container && this.boundContainerHandler) {
+      this.container.removeEventListener('click', this.boundContainerHandler);
     }
   }
 
@@ -78,15 +109,13 @@ class Modal {
   }
 
   showSuccess() {
-    console.log('Showing success state');
-    if (this.formContent && this.successContent) {
-      this.formContent.style.display = 'none';
-      this.successContent.style.display = 'block';
-    } else {
-      console.log('Missing elements for success state:', {
-        formContent: this.formContent,
-        successContent: this.successContent
-      });
+    try {
+      if (this.formContent && this.successContent) {
+        this.formContent.style.display = 'none';
+        this.successContent.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error showing success state:', error);
     }
   }
 
@@ -103,57 +132,109 @@ class Modal {
 
 // Initialize modal when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM loaded, initializing modal');
-  const waitlistModal = new Modal('waitlist-modal');
+  new Modal('waitlist-modal');
 });
 
-// Mobile menu toggle
-const hamburger = document.querySelector('.nav__hamburger');
-const mobileMenu = document.getElementById('mobile-menu');
-const closeBtn = document.querySelector('.mobile-menu__close');
+// Mobile Menu Manager
+class MobileMenu {
+  constructor() {
+    try {
+      this.hamburger = document.querySelector('.nav__hamburger');
+      this.mobileMenu = document.getElementById('mobile-menu');
+      this.closeBtn = document.querySelector('.mobile-menu__close');
+      this.headerWrapper = document.querySelector('.header-wrapper');
+      
+      if (this.hamburger && this.mobileMenu && this.closeBtn) {
+        this.init();
+      }
+    } catch (error) {
+      console.error('Error initializing mobile menu:', error);
+    }
+  }
 
-function openMobileMenu() {
-  mobileMenu.setAttribute('aria-hidden', 'false');
-  hamburger.setAttribute('aria-expanded', 'true');
-  document.body.style.overflow = 'hidden';
-  document.querySelector('.header-wrapper').classList.add('mobile-menu-open');
-  // Focus first link
-  const firstLink = mobileMenu.querySelector('a');
-  if (firstLink) firstLink.focus();
+  init() {
+    try {
+      // Bind methods to preserve 'this' context
+      this.boundEscapeHandler = (e) => {
+        if (this.mobileMenu.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') {
+          this.close();
+        }
+      };
+
+      this.boundOverlayHandler = (e) => {
+        if (e.target === this.mobileMenu) this.close();
+      };
+
+      this.boundResizeHandler = () => {
+        if (this.mobileMenu.getAttribute('aria-hidden') === 'false') {
+          this.close();
+        }
+      };
+
+      // Set up event listeners
+      this.hamburger.addEventListener('click', () => this.open());
+      this.closeBtn.addEventListener('click', () => this.close());
+      document.addEventListener('keydown', this.boundEscapeHandler);
+      this.mobileMenu.addEventListener('click', this.boundOverlayHandler);
+      window.addEventListener('resize', this.boundResizeHandler);
+
+      // Close menu when clicking on any link
+      const menuLinks = this.mobileMenu.querySelectorAll('a');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', () => this.close());
+      });
+
+    } catch (error) {
+      console.error('Error setting up mobile menu event listeners:', error);
+    }
+  }
+
+  open() {
+    try {
+      this.mobileMenu.setAttribute('aria-hidden', 'false');
+      this.hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      if (this.headerWrapper) {
+        this.headerWrapper.classList.add('mobile-menu-open');
+      }
+      
+      // Focus first link
+      const firstLink = this.mobileMenu.querySelector('a');
+      if (firstLink) firstLink.focus();
+    } catch (error) {
+      console.error('Error opening mobile menu:', error);
+    }
+  }
+
+  close() {
+    try {
+      this.mobileMenu.setAttribute('aria-hidden', 'true');
+      this.hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      if (this.headerWrapper) {
+        this.headerWrapper.classList.remove('mobile-menu-open');
+      }
+      this.hamburger.focus();
+    } catch (error) {
+      console.error('Error closing mobile menu:', error);
+    }
+  }
+
+  cleanup() {
+    // Clean up event listeners
+    if (this.boundEscapeHandler) {
+      document.removeEventListener('keydown', this.boundEscapeHandler);
+    }
+    if (this.boundOverlayHandler && this.mobileMenu) {
+      this.mobileMenu.removeEventListener('click', this.boundOverlayHandler);
+    }
+    if (this.boundResizeHandler) {
+      window.removeEventListener('resize', this.boundResizeHandler);
+    }
+  }
 }
 
-function closeMobileMenu() {
-  mobileMenu.setAttribute('aria-hidden', 'true');
-  hamburger.setAttribute('aria-expanded', 'false');
-  document.body.style.overflow = '';
-  document.querySelector('.header-wrapper').classList.remove('mobile-menu-open');
-  hamburger.focus();
-}
-
-if (hamburger && mobileMenu && closeBtn) {
-  hamburger.addEventListener('click', openMobileMenu);
-  closeBtn.addEventListener('click', closeMobileMenu);
-  // ESC to close
-  document.addEventListener('keydown', function(e) {
-    if (mobileMenu.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') {
-      closeMobileMenu();
-    }
-  });
-  // Click outside menu to close
-  mobileMenu.addEventListener('click', function(e) {
-    if (e.target === mobileMenu) closeMobileMenu();
-  });
-
-  // Close menu when clicking on any link
-  const menuLinks = mobileMenu.querySelectorAll('a');
-  menuLinks.forEach(link => {
-    link.addEventListener('click', closeMobileMenu);
-  });
-
-  // Close menu and restore scrolling on window resize
-  window.addEventListener('resize', function() {
-    if (mobileMenu.getAttribute('aria-hidden') === 'false') {
-      closeMobileMenu();
-    }
-  });
-} 
+// Initialize mobile menu
+document.addEventListener('DOMContentLoaded', () => {
+  window.mobileMenu = new MobileMenu();
+}); 

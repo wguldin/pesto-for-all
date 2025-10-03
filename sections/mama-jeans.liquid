@@ -10,7 +10,17 @@
       After making our fresh pesto, we immediately freeze it in small molds that are easy to use in all your favorite recipes.
     </p>
   </div>
-  <img src="{{ 'mama-jeans-store.png' | asset_url }}" class="block__image" alt="MaMa Jean's Natural Market storefront"/>
+  <img 
+    src="{{ 'mama-jeans-store-400w.png' | asset_url }}" 
+    srcset="{{ 'mama-jeans-store-400w.png' | asset_url }} 400w,
+            {{ 'mama-jeans-store-800w.png' | asset_url }} 800w,
+            {{ 'mama-jeans-store-1200w.png' | asset_url }} 1200w,
+            {{ 'mama-jeans-store.png' | asset_url }} 1600w"
+    sizes="(max-width: 768px) 100vw, 50vw"
+    class="block__image" 
+    alt="MaMa Jean's Natural Market storefront"
+    loading="lazy"
+  />
   <div class="divider">
     <hr />
     <hr />

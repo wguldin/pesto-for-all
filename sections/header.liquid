@@ -10,12 +10,6 @@
 <header class="header-wrapper" role="banner">
   <div class="header">
     <nav class="nav" role="navigation" aria-label="Main navigation">
-      <ul class="nav__link-list">
-        <li class="nav__link"><a class="fancy-link" href="/pages/where-to-find-us" aria-label="Find our products">Where to Find Us</a></li>
-        <li class="nav__link"><a class="fancy-link" href="/#about-us" aria-label="Learn about us">About Us</a></li>
-        <li class="nav__link"><a class="fancy-link" href="/#our-farm" aria-label="Visit our farm">Our farm</a></li>
-        <li class="nav__link"><a class="fancy-link" href="/#our-inspiration" aria-label="Our inspiration story">Our inspiration</a></li>
-      </ul>
       <button class="nav__hamburger" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
         <span class="nav__hamburger-bar" aria-hidden="true"></span>
         <span class="nav__hamburger-bar" aria-hidden="true"></span>
@@ -30,16 +24,115 @@
           loading="eager"
         >
       </a>
+      <ul class="nav__link-list">
+        <li class="nav__link"><a class="fancy-link" href="/collections/all" aria-label="Shop our products">Shop</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/pages/recipes" aria-label="View our pesto recipes">Recipes</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/pages/where-to-find-us" aria-label="Find our pesto in stores">Find our pesto in stores</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/#about-us" aria-label="Learn about us">About Us</a></li>
+      </ul>
+      <button class="nav__cart" aria-label="Open cart" aria-controls="cart-flyout" aria-expanded="false">
+        <svg class="nav__cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav__cart-count" id="cart-count">{{ cart.item_count }}</span>
+      </button>
     </nav>
     <div id="mobile-menu" class="mobile-menu" aria-hidden="true" role="navigation" aria-label="Mobile menu">
       <button class="mobile-menu__close" aria-label="Close menu">&times;</button>
       <ul class="mobile-menu__links">
         <li><a href="/" aria-label="Home page">Home</a></li>
-        <li><a href="/pages/where-to-find-us" aria-label="Find our products">Where to Find Us</a></li>
+        <li><a href="/collections/all" aria-label="Shop our products">Shop</a></li>
+        <li><a href="/pages/recipes" aria-label="View our pesto recipes">Recipes</a></li>
+        <li><a href="/pages/where-to-find-us" aria-label="Find our pesto in stores">Find our pesto in stores</a></li>
         <li><a href="/#about-us" aria-label="Learn about us">About Us</a></li>
-        <li><a href="/#our-farm" aria-label="Visit our farm">Our farm</a></li>
-        <li><a href="/#our-inspiration" aria-label="Our inspiration story">Our inspiration</a></li>
       </ul>
+    </div>
+  </div>
+  
+  <!-- Cart Flyout -->
+  <div id="cart-flyout" class="cart-flyout" aria-hidden="true">
+    <div class="cart-flyout__header">
+      <h3 class="cart-flyout__title">Your Cart</h3>
+      <button class="cart-flyout__close" aria-label="Close cart">&times;</button>
+    </div>
+    
+    <div class="cart-flyout__content">
+      <div class="cart-items" id="cart-items">
+        {% if cart.item_count > 0 %}
+          {% comment %} First display featured products {% endcomment %}
+          {% for item in cart.items %}
+            {% if item.product.tags contains 'Featured' %}
+              <div class="cart-item" data-item-key="{{ item.key }}">
+                <div class="cart-item__image">
+                  <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
+                </div>
+                <div class="cart-item__details">
+                  <h4 class="cart-item__title">
+                    {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
+                      {{ item.variant.title }}
+                    {% else %}
+                      {{ item.product.title }}
+                    {% endif %}
+                  </h4>
+                  <div class="cart-item__price-row">
+                    <div class="cart-item__quantity">
+                      <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                      <span class="quantity-display">{{ item.quantity }}</span>
+                      <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                    </div>
+                    <h5 class="cart-item__price">{{ item.final_line_price | money }}</h5>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          
+          {% comment %} Then display non-featured products {% endcomment %}
+          {% for item in cart.items %}
+            {% unless item.product.tags contains 'Featured' %}
+              <div class="cart-item" data-item-key="{{ item.key }}">
+                <div class="cart-item__image">
+                  <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title }}" loading="lazy">
+                </div>
+                <div class="cart-item__details">
+                  <h4 class="cart-item__title">
+                    {% if item.variant.title != 'Default Title' and item.variant.title != blank %}
+                      {{ item.variant.title }}
+                    {% else %}
+                      {{ item.product.title }}
+                    {% endif %}
+                  </h4>
+                  <div class="cart-item__price-row">
+                    <div class="cart-item__quantity">
+                      <button class="quantity-btn quantity-btn--minus" data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                      <span class="quantity-display">{{ item.quantity }}</span>
+                      <button class="quantity-btn quantity-btn--plus" data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                    </div>
+                    <h5 class="cart-item__price">{{ item.final_line_price | money }}</h5>
+                  </div>
+                </div>
+              </div>
+            {% endunless %}
+          {% endfor %}
+        
+        {% else %}
+          <div class="cart-flyout__empty">
+            <p>Your cart is empty</p>
+            <a href="/collections/all" class="button button--secondary">Start Shopping</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Cart Footer - Pinned to bottom -->
+    <div class="cart-flyout__footer">
+      <div class="cart-flyout__subtotal">
+        <h4>Subtotal</h4>
+        <h4 class="cart-flyout__subtotal-amount">{{ cart.total_price | money }}</h4>
+      </div>
+      <a href="/checkout" class="button button--primary cart-flyout__checkout">Checkout now</a>
     </div>
   </div>
 </header>

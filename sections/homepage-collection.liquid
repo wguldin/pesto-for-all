@@ -1,0 +1,172 @@
+<div>
+  {% render 'divider' %}
+</div>
+
+<div class="block homepage-products-block">
+  <h3 class="homepage-products__headline">Why don't you give it a try?</h3>
+
+  <div class="homepage-products-compact">
+    {% if collections['all'].products.size > 0 %}
+      {% comment %} First display featured products {% endcomment %}
+      {% for product in collections['all'].products %}
+        {% if product.tags contains 'Featured' and forloop.index <= 4 %}
+        <div class="compact-product-card" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}">
+          <div class="compact-product-card__image">
+            <img 
+              src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+              alt="{{ product.title }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              class="compact-product-card__image--primary"
+            >
+            {% if product.images.size > 1 %}
+              <img 
+                src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
+                alt="{{ product.title }}"
+                loading="lazy"
+                class="compact-product-card__image--secondary"
+              >
+            {% endif %}
+          </div>
+          <div class="compact-product-card__content">
+            <h3 class="compact-product-card__title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            
+            <!-- Accessible price for screen readers -->
+            <div class="compact-product-card__price sr-only">
+              {% if product.compare_at_price > product.price %}
+                Sale price {{ product.price | money }}, regular price {{ product.compare_at_price | money }}
+              {% else %}
+                {{ product.price | money }}
+              {% endif %}
+            </div>
+            
+            {% if product.available %}
+              <form class="compact-add-to-cart" data-product-form="{{ product.id }}">
+                {% if product.has_only_default_variant %}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="button button--small" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                    <span>Quick Add</span>
+                    <span class="compact-product-card__button-bullet">&nbsp;•&nbsp;</span>
+                    <span>
+                      {% if product.compare_at_price > product.price %}
+                        {{ product.price | money }}
+                      {% else %}
+                        {{ product.price | money }}
+                      {% endif %}
+                    </span>
+                  </button>
+                {% else %}
+                  <a href="{{ product.url }}" class="button button--small">Get Started</a>
+                {% endif %}
+              </form>
+            {% else %}
+              <span class="sold-out">Sold Out</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+      
+      {% comment %} Then display non-featured products to fill remaining slots {% endcomment %}
+      {% assign featured_count = 0 %}
+      {% for product in collections['all'].products %}
+        {% if product.tags contains 'Featured' %}
+          {% assign featured_count = featured_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      
+      {% assign remaining_slots = 4 | minus: featured_count %}
+      {% if remaining_slots > 0 %}
+        {% assign shown_count = 0 %}
+        {% for product in collections['all'].products %}
+          {% unless product.tags contains 'Featured' %}
+            {% if shown_count < remaining_slots %}
+              {% assign shown_count = shown_count | plus: 1 %}
+        <div class="compact-product-card" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}">
+          <div class="compact-product-card__image">
+            <img 
+              src="{{ product.featured_image | image_url: width: 200, height: 200 }}" 
+              alt="{{ product.title }}"
+              loading="lazy"
+              class="compact-product-card__image--primary"
+            >
+            {% if product.images.size > 1 %}
+              <img 
+                src="{{ product.images[1] | image_url: width: 200, height: 200 }}" 
+                alt="{{ product.title }}"
+                loading="lazy"
+                class="compact-product-card__image--secondary"
+              >
+            {% endif %}
+          </div>
+          <div class="compact-product-card__content">
+            <h3 class="compact-product-card__title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            
+            <!-- Accessible price for screen readers -->
+            <div class="compact-product-card__price sr-only">
+              {% if product.compare_at_price > product.price %}
+                Sale price {{ product.price | money }}, regular price {{ product.compare_at_price | money }}
+              {% else %}
+                {{ product.price | money }}
+              {% endif %}
+            </div>
+            
+            {% if product.available %}
+              <form class="compact-add-to-cart" data-product-form="{{ product.id }}">
+                {% if product.has_only_default_variant %}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="button button--small" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                    <span>Quick Add</span>
+                    <span class="compact-product-card__button-bullet">&nbsp;•&nbsp;</span>
+                    <span>
+                      {% if product.compare_at_price > product.price %}
+                        {{ product.price | money }}
+                      {% else %}
+                        {{ product.price | money }}
+                      {% endif %}
+                    </span>
+                  </button>
+                {% else %}
+                  <a href="{{ product.url }}" class="button button--small">Get Started</a>
+                {% endif %}
+              </form>
+            {% else %}
+              <span class="sold-out">Sold Out</span>
+            {% endif %}
+          </div>
+        </div>
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+    {% else %}
+      <div class="homepage-products-empty">
+        <p>Available at Farmers Market of the Ozarks from May to October!</p>
+      </div>
+    {% endif %}
+  </div>
+  
+  {% if collections['all'].products.size > 4 %}
+    <div class="homepage-products-view-all">
+      <a href="{{ collections['all'].url }}" class="button">View All Products</a>
+    </div>
+  {% endif %}
+</div>
+
+<div class="divider-container--background-green">
+  {% render 'divider' %}
+</div>
+
+{% schema %}
+{
+  "name": "Homepage Collection",
+  "presets": [
+    {
+      "name": "Homepage Collection"
+    }
+  ]
+}
+{% endschema %}

@@ -7,7 +7,17 @@
       All of our pesto is made from basil grown on our farm outside Mountain Grove, Missouri. We harvest our basil leaves at peak flavor, and we grind them onsite within a few hours.
     </p>
   </div>
-  <img src="{{ 'farm-image.png' | asset_url }}" class="block__image" alt="Overhead view of our farm fields and garden beds"/>
+  <img 
+    src="{{ 'farm-image-400w.png' | asset_url }}" 
+    srcset="{{ 'farm-image-400w.png' | asset_url }} 400w,
+            {{ 'farm-image-800w.png' | asset_url }} 800w,
+            {{ 'farm-image-1200w.png' | asset_url }} 1200w,
+            {{ 'farm-image.png' | asset_url }} 1600w"
+    sizes="(max-width: 768px) 100vw, 50vw"
+    class="block__image" 
+    alt="Overhead view of our farm fields and garden beds"
+    loading="lazy"
+  />
   {% render 'divider' %}
 </div>
 

@@ -1,0 +1,143 @@
+<div class="recipes-page">
+  <div class="recipes-hero">
+    <h1 class="recipes-hero__title">{{ section.settings.title }}</h1>
+    <p class="recipes-hero__description">{{ section.settings.description }}</p>
+  </div>
+
+  <div class="recipes-grid">
+    {% for block in section.blocks %}
+      <div class="recipe-card" {{ block.shopify_attributes }}>
+        <h3 class="recipe-card__title">{{ block.settings.recipe_title }}</h3>
+        <div class="recipe-card__content">{{ block.settings.recipe_content }}</div>
+        {% if block.settings.recipe_link != blank %}
+          <a href="{{ block.settings.recipe_link }}" class="recipe-card__link fancy-link" target="_blank" rel="noopener">View full recipe</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.recipes-page {
+  padding: 2rem 4rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.recipes-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.recipes-hero__title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.recipes-hero__description {
+  font-size: 1.2rem;
+  color: var(--color-text);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.recipe-card {
+  background: var(--color-yellow--lightest);
+  border: 3px solid var(--color-green--dark);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: -.75rem .75rem 0 0 var(--color-green--dark);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: -12px 12px 0 0 var(--color-green--dark);
+}
+
+.recipe-card__title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-green--dark);
+}
+
+.recipe-card__content {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.recipe-card__link {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+@media (max-width: 50rem) {
+  .recipes-page {
+    padding: 2rem;
+  }
+
+  .recipes-hero__title {
+    font-size: 2.5rem;
+  }
+
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Recipes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page Title",
+      "default": "Our Favorite Pesto Recipes"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Page Description",
+      "default": "Discover delicious ways to enjoy our homemade pesto"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "recipe",
+      "name": "Recipe",
+      "settings": [
+        {
+          "type": "text",
+          "id": "recipe_title",
+          "label": "Recipe Title"
+        },
+        {
+          "type": "html",
+          "id": "recipe_content",
+          "label": "Recipe Content"
+        },
+        {
+          "type": "url",
+          "id": "recipe_link",
+          "label": "Recipe Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recipes"
+    }
+  ]
+}
+{% endschema %}

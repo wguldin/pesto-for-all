@@ -1,0 +1,67 @@
+{% comment %}
+  Accessible breadcrumb navigation
+  Automatically generates breadcrumbs based on current page
+{% endcomment %}
+
+{%- unless template == 'index' -%}
+  <nav class="breadcrumb" aria-label="Breadcrumb navigation">
+    <ol>
+      <li>
+        <a href="/" aria-label="Home page">Home</a>
+      </li>
+      
+      {%- if template contains 'collection' -%}
+        <li>
+          <span aria-current="page">{{ collection.title }}</span>
+        </li>
+      
+      {%- elsif template contains 'product' -%}
+        {%- if collection -%}
+          <li>
+            <a href="{{ collection.url }}">{{ collection.title }}</a>
+          </li>
+        {%- else -%}
+          <li>
+            <a href="/collections/all">Products</a>
+          </li>
+        {%- endif -%}
+        <li>
+          <span aria-current="page">{{ product.title }}</span>
+        </li>
+      
+      {%- elsif template contains 'article' -%}
+        <li>
+          <a href="{{ blog.url }}">{{ blog.title }}</a>
+        </li>
+        <li>
+          <span aria-current="page">{{ article.title }}</span>
+        </li>
+      
+      {%- elsif template == 'page' -%}
+        <li>
+          <span aria-current="page">{{ page.title }}</span>
+        </li>
+      
+      {%- elsif template == 'search' -%}
+        <li>
+          <span aria-current="page">Search{% if search.terms %}: "{{ search.terms }}"{% endif %}</span>
+        </li>
+      
+      {%- elsif template == 'cart' -%}
+        <li>
+          <span aria-current="page">Shopping Cart</span>
+        </li>
+      
+      {%- elsif template contains 'customers' -%}
+        <li>
+          <span aria-current="page">Account</span>
+        </li>
+      
+      {%- else -%}
+        <li>
+          <span aria-current="page">{{ page_title }}</span>
+        </li>
+      {%- endif -%}
+    </ol>
+  </nav>
+{%- endunless -%}

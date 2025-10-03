@@ -1,0 +1,29 @@
+{
+  "name": "pesto-shopify-theme",
+  "version": "1.0.0",
+  "description": "Pesto Shopify Theme with comprehensive testing",
+  "private": true,
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:simple": "vitest run tests/unit/*-simple.test.js",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "lint": "eslint assets/**/*.js",
+    "lint:fix": "eslint assets/**/*.js --fix"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@testing-library/dom": "^9.3.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^14.4.0",
+    "@vitest/ui": "^1.0.0",
+    "jsdom": "^22.0.0",
+    "eslint": "^8.50.0",
+    "c8": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

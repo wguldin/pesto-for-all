@@ -1,5 +1,15 @@
 <div class="block block--green" id="our-inspiration">
-  <img src="{{ 'italy-image.png' | asset_url }}" class="block__image" alt="Narrow street we saw in our trip to Italy"/>
+  <img 
+    src="{{ 'italy-image-400w.png' | asset_url }}" 
+    srcset="{{ 'italy-image-400w.png' | asset_url }} 400w,
+            {{ 'italy-image-800w.png' | asset_url }} 800w,
+            {{ 'italy-image-1200w.png' | asset_url }} 1200w,
+            {{ 'italy-image.png' | asset_url }} 1600w"
+    sizes="(max-width: 768px) 100vw, 50vw"
+    class="block__image" 
+    alt="Narrow street we saw in our trip to Italy"
+    loading="lazy"
+  />
   <div class="block__text">
     <h2 class="block__headline">
       Our inspiration
