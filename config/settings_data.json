@@ -30,6 +30,7 @@
           "recipe_DLnL6J": {
             "type": "recipe",
             "settings": {
+              "recipe_image": "shopify://shop_images/6EE39764-86E6-4ED9-BA6A-D739B82C304F.jpg",
               "recipe_title": "Pesto Toast",
               "recipe_content": "<p>If you have tried our pesto at the local farmer's market you likely know about pesto toast!</p><p>Just toast your favorite bread and spread pesto on top.</p>",
               "recipe_link": ""
@@ -71,8 +72,9 @@
           "recipe_Bey9dd": {
             "type": "recipe",
             "settings": {
+              "recipe_image": "shopify://shop_images/IMG_0546_Large_83f2b1d3-a3f8-455d-b5b9-0efedc19e4e9.jpg",
               "recipe_title": "Pizza",
-              "recipe_content": "<p>Pesto pizza is one of our family's go-to recipes for dinner. We simply swap out the red sauce for pesto as a base layer and then add toppings. Our favorite toppings for this pizza are Kalamata olives, red onion, feta and if you are an omnivore, a little chicken and Italian sausage.\n\nBelow are a couple recipes for pizza doughs we use:\n\nMake your own dough (if you have time to spare)\nI need a dough 5 minutes ago recipe</p>",
+              "recipe_content": "<p>Pesto pizza is one of our family's go-to recipes for dinner. We simply swap out the red sauce for pesto as a base layer and then add toppings. Our favorite toppings for this pizza are Kalamata olives, red onion, feta and if you are an omnivore, a little chicken and Italian sausage.<br/><br/>Below are a couple recipes for pizza doughs we use:<br/><br/>Make your own dough (if you have time to spare)<br/>I need a dough 5 minutes ago recipe</p>",
               "recipe_link": ""
             }
           }
@@ -93,6 +95,30 @@
       },
       "footer": {
         "type": "footer",
+        "settings": {}
+      },
+      "hero": {
+        "type": "hero",
+        "settings": {}
+      },
+      "homepage-collection": {
+        "type": "homepage-collection",
+        "settings": {}
+      },
+      "farm": {
+        "type": "farm",
+        "settings": {}
+      },
+      "inspiration": {
+        "type": "inspiration",
+        "settings": {}
+      },
+      "about": {
+        "type": "about",
+        "settings": {}
+      },
+      "instagram-feed": {
+        "type": "instagram-feed",
         "settings": {}
       }
     },
