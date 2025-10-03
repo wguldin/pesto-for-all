@@ -7,6 +7,11 @@
   <div class="recipes-grid">
     {% for block in section.blocks %}
       <div class="recipe-card" {{ block.shopify_attributes }}>
+        {% if block.settings.recipe_image != blank %}
+          <div class="recipe-card__image">
+            <img src="{{ block.settings.recipe_image | image_url: width: 600 }}" alt="{{ block.settings.recipe_title }}" loading="lazy">
+          </div>
+        {% endif %}
         <h3 class="recipe-card__title">{{ block.settings.recipe_title }}</h3>
         <div class="recipe-card__content">{{ block.settings.recipe_content }}</div>
         {% if block.settings.recipe_link != blank %}
@@ -43,9 +48,20 @@
 }
 
 .recipes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  column-count: 3;
+  column-gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .recipes-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .recipes-grid {
+    column-count: 1;
+  }
 }
 
 .recipe-card {
@@ -55,6 +71,22 @@
   padding: 2rem;
   box-shadow: -.75rem .75rem 0 0 var(--color-green--dark);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  break-inside: avoid;
+  margin-bottom: 2rem;
+  display: inline-block;
+  width: 100%;
+}
+
+.recipe-card__image {
+  margin: -2rem -2rem 1.5rem -2rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  overflow: hidden;
+}
+
+.recipe-card__image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .recipe-card:hover {
@@ -87,10 +119,6 @@
   .recipes-hero__title {
     font-size: 2.5rem;
   }
-
-  .recipes-grid {
-    grid-template-columns: 1fr;
-  }
 }
 </style>
 
@@ -117,12 +145,17 @@
       "name": "Recipe",
       "settings": [
         {
+          "type": "image_picker",
+          "id": "recipe_image",
+          "label": "Recipe Image (optional)"
+        },
+        {
           "type": "text",
           "id": "recipe_title",
           "label": "Recipe Title"
         },
         {
-          "type": "html",
+          "type": "richtext",
           "id": "recipe_content",
           "label": "Recipe Content"
         },
