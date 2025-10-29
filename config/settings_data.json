@@ -149,7 +149,7 @@
             "type": "faq_item",
             "settings": {
               "question": "How long does shipping take?",
-              "answer": "<p>We ship orders so they will arrive within 2-3 business days depending on your location.</p><p>We ship all orders on Monday to avoid weekend delays. <br/></p><p>You'll receive a tracking number via email as soon as your order ships so you can monitor its progress.</p><p><br/></p>"
+              "answer": "<p>We ship orders so they will arrive within 2-3 business days depending on your location.</p><p>We ship all orders on Monday to avoid weekend delays. </p><p>You'll receive a tracking number via email as soon as your order ships so you can monitor its progress.</p><p><br/></p>"
             }
           },
           "faq_item_7fqecx": {
@@ -165,6 +165,20 @@
               "question": "How should I store my pesto when it arrives?",
               "answer": "<p>Since our fresh basil pesto has no preservatives, it should be <strong>kept </strong>refrigerated and <strong>used within 3 days of delivery. </strong>It can also be refrozen and will keep for up to 1<strong>2 months in the freezer</strong>. </p><p>If you plan to refreeze your jar, we recommend that you take the pesto out and lay it flat in a ziploc. This will make it easy to break off what you want to use without having to thaw it all out!</p>"
             }
+          },
+          "faq_item_kWj8E4": {
+            "type": "faq_item",
+            "settings": {
+              "question": "Why do you have a shipping surcharge for small orders?",
+              "answer": "<p>For pesto orders of a single jar, we have to add a $5 fee to your total to cover our packaging costs. <br/><br/>Each orders ships with several ice packs and an insulated liner. If we didn't add this fee our small business would actually loose money every time we send a jar. As we grow, though, we're hoping we'll no longer need this fee. </p>"
+            }
+          },
+          "faq_item_B8CN98": {
+            "type": "faq_item",
+            "settings": {
+              "question": "Actually, I have a question about something else ...",
+              "answer": "<p>No worries at all! Please feel free to email us at <a href=\"mailto:hello@pestoforall.co\" title=\"mailto:hello@pestoforall.co\">hello@pestoforall.co</a> and we'll try to get back to you within 24 hours. </p>"
+            }
           }
         },
         "block_order": [
@@ -173,7 +187,9 @@
           "faq_item_M4x7DE",
           "faq_item_g6tcTP",
           "faq_item_7fqecx",
-          "faq_item_Jd6f3f"
+          "faq_item_Jd6f3f",
+          "faq_item_kWj8E4",
+          "faq_item_B8CN98"
         ],
         "settings": {
           "title": "Shipping FAQ",
