@@ -1,0 +1,289 @@
+<div class="faq-page">
+  <div class="faq-hero">
+    <h1 class="faq-hero__title">{{ section.settings.title }}</h1>
+    {% if section.settings.description != blank %}
+      <p class="faq-hero__description">{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="faq-container">
+    {% for block in section.blocks %}
+      <div class="faq-item" {{ block.shopify_attributes }}>
+        <button class="faq-item__question" aria-expanded="false">
+          <span>{{ block.settings.question }}</span>
+          <svg class="faq-item__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="faq-item__answer">
+          <div class="faq-item__answer-content">
+            {{ block.settings.answer }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.faq-page {
+  padding: 2rem 4rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.faq-hero__title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.faq-hero__description {
+  font-size: 1.2rem;
+  color: var(--color-text);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-item {
+  background: var(--color-yellow--lightest);
+  border: 3px solid var(--color-green--dark);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: -.5rem .5rem 0 0 var(--color-green--dark);
+}
+
+.faq-item__question {
+  width: 100%;
+  padding: 1.5rem 2rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-green--dark);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.faq-item__question:hover {
+  background-color: rgba(44, 95, 45, 0.05);
+}
+
+.faq-item__question[aria-expanded="true"] {
+  background-color: rgba(44, 95, 45, 0.08);
+}
+
+.faq-item__icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  color: var(--color-green--dark);
+}
+
+.faq-item__question[aria-expanded="true"] .faq-item__icon {
+  transform: rotate(180deg);
+}
+
+.faq-item__answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-item__answer-content {
+  padding: 0 2rem 1.5rem 2rem;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.faq-item__answer-content p {
+  margin-bottom: 1rem;
+}
+
+.faq-item__answer-content p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-item__answer-content strong {
+  font-weight: 600;
+  color: var(--color-green--dark);
+}
+
+.faq-item__answer-content a {
+  color: var(--color-green--dark);
+  text-decoration: underline;
+}
+
+.faq-item__answer-content a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 50rem) {
+  .faq-page {
+    padding: 2rem;
+  }
+
+  .faq-hero__title {
+    font-size: 2.5rem;
+  }
+
+  .faq-item__question {
+    font-size: 1.1rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .faq-item__answer-content {
+    padding: 0 1.5rem 1.25rem 1.5rem;
+  }
+}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqItems = document.querySelectorAll('.faq-item__question');
+
+    faqItems.forEach(button => {
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        const answer = this.nextElementSibling;
+
+        // Toggle this item
+        this.setAttribute('aria-expanded', !isExpanded);
+
+        if (!isExpanded) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        } else {
+          answer.style.maxHeight = '0';
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shipping FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page Title",
+      "default": "Shipping FAQ"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Page Description",
+      "default": "We want to make sure your pesto arrives fresh and delicious! Here are answers to common questions about shipping and handling your frozen pesto."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How is my pesto shipped?",
+            "answer": "<p>All of our pesto is shipped frozen to ensure maximum freshness. We pack your order with ice packs or dry ice (depending on your location and the time of year) in an insulated box to keep everything as cold as possible during transit.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if my pesto arrives thawed or semi-frozen?",
+            "answer": "<p>Don't worry—this is completely normal! During transit, especially in warmer months or longer shipping routes, some thawing may occur. <strong>As long as your pesto is below 40°F when it arrives, it is safe to consume and can be refrozen or refrigerated for immediate use.</strong></p><p>Our pesto is made with high-quality ingredients and is perfectly safe to refreeze if it has stayed cold during shipping.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I refreeze pesto that arrived thawed?",
+            "answer": "<p>Yes! If your pesto arrives cold (below 40°F) but thawed, you can safely refreeze it. The texture and flavor will remain excellent. Simply pop it in your freezer as soon as it arrives.</p><p>If you prefer to use it right away, thawed pesto will keep in the refrigerator for up to 2 weeks.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Most orders arrive within 2-5 business days depending on your location. We ship orders early in the week (Monday-Wednesday) to avoid weekend delays and ensure your pesto arrives in the best condition.</p><p>You'll receive a tracking number via email as soon as your order ships so you can monitor its progress.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if my order is delayed?",
+            "answer": "<p>If your order is delayed by the carrier and arrives more than 4 days after the expected delivery date, please check the temperature of your pesto when it arrives. If any products are above 40°F or have an off smell, please don't consume them—contact us immediately and we'll make it right.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you ship year-round?",
+            "answer": "<p>Yes! We ship throughout the year, adjusting our packing methods based on the season. During summer months, we use extra ice packs and may use dry ice for longer-distance shipments to ensure your pesto stays frozen.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What areas do you ship to?",
+            "answer": "<p>We currently ship to all 50 U.S. states. Shipping times and costs vary by location—you'll see the exact shipping cost at checkout before you complete your order.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How should I store my pesto when it arrives?",
+            "answer": "<p><strong>For long-term storage:</strong> Place your pesto in the freezer immediately. It will keep for up to 12 months frozen.</p><p><strong>For immediate use:</strong> If you plan to use it within 2 weeks, you can store it in the refrigerator. Our resealable pouches make it easy to use what you need and save the rest.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Still have questions?",
+            "answer": "<p>We're here to help! If you have any concerns about your order or questions about shipping, please reach out to us and we typically respond within 24 hours.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
