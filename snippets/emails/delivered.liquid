@@ -1,21 +1,21 @@
-{% if fulfillment.item_count == item_count %} 
-{% capture email_title %}Your order has been delivered{% endcapture %}
-{% capture email_body %}Your order has been delivered. Track your shipment to see the delivery status.{% endcapture %}
-{% elsif fulfillment.item_count > 1 %} 
+{% if fulfillment.item_count == item_count %}
+{% capture email_title %}Your order has been delivered, {{ customer.first_name }}!{% endcapture %}
+{% capture email_body %}Great news! Your package has arrived. We hope everything arrived safely and you love it!{% endcapture %}
+{% elsif fulfillment.item_count > 1 %}
 {% if fulfillment_status == 'fulfilled' %}
-  {% capture email_title %}The last items in your order have been delivered{% endcapture %}
-  {% capture email_body %}The last items in your order have been delivered. Track your shipment to see the delivery status.{% endcapture %}
+  {% capture email_title %}The last items in your order have been delivered, {{ customer.first_name }}!{% endcapture %}
+  {% capture email_body %}Exciting news! The last items in your order have arrived. We hope everything is perfect!{% endcapture %}
 {% else %}
-  {% capture email_title %}Some items in your order have been delivered{% endcapture %}
-  {% capture email_body %}Some items in your order have been delivered. Track your shipment to see the delivery status.{% endcapture %}
+  {% capture email_title %}Some items in your order have been delivered, {{ customer.first_name }}!{% endcapture %}
+  {% capture email_body %}Good news! Some items in your order have arrived. We hope you love them!{% endcapture %}
 {% endif %}
-{% else %} 
-{% if fulfillment_status == 'fulfilled' %}
-  {% capture email_title %}The last item in your order has been delivered{% endcapture %}
-  {% capture email_body %}The last item in your order has been delivered. Track your shipment to see the delivery status.{% endcapture %}
 {% else %}
-  {% capture email_title %}One item in your order has been delivered{% endcapture %}
-  {% capture email_body %}One item in your order has been delivered. Track your shipment to see the delivery status.{% endcapture %}
+{% if fulfillment_status == 'fulfilled' %}
+  {% capture email_title %}The last item in your order has been delivered, {{ customer.first_name }}!{% endcapture %}
+  {% capture email_body %}Exciting news! The last item in your order has arrived. We hope it's perfect!{% endcapture %}
+{% else %}
+  {% capture email_title %}One item in your order has been delivered, {{ customer.first_name }}!{% endcapture %}
+  {% capture email_body %}Good news! One item in your order has arrived. We hope you love it!{% endcapture %}
 {% endif %}
 {% endif %}
 
@@ -28,7 +28,21 @@
 <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
 <style>
   .button__cell { background: {{ shop.email_accent_color }}; }
-  a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  a { color: {{ shop.email_accent_color }}; text-decoration: underline; }
+  a:hover, a:focus { color: {{ shop.email_accent_color }}; opacity: 0.8; }
+  a:visited { color: {{ shop.email_accent_color }}; opacity: 0.85; }
+  .button__text { text-decoration: none; }
+
+  /* Improve readability and spacing */
+  p { line-height: 1.6; margin: 1em 0; }
+  h2, h3 { line-height: 1.3; }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .body { background-color: #1a1a1a; }
+    .container { background-color: #2d2d2d; }
+    p, h2, h3, td { color: #e0e0e0 !important; }
+  }
 </style>
 </head>
 
@@ -47,36 +61,40 @@
 
             <table class="row">
               <tr>
-                <td class="shop-name__cell">
+                <td class="shop-name__cell" style="text-align: center;">
                   {%- if shop.email_logo_url %}
-                    <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}" style="display: inline-block; margin: 0 auto;">
                   {%- else %}
                     <h1 class="shop-name__text">
                       <a href="{{shop.url}}">{{ shop.name }}</a>
                     </h1>
                   {%- endif %}
                 </td>
+              </tr>
+            </table>
 
-                  <td>
-                    <table class="order-po-number__container">
-                      <tr>
-                        <td class="order-number__cell">
-                          <span class="order-number__text">
-                            Order {{ order_name }}
-                          </span>
-                        </td>
-                      </tr>
-                      {%- if po_number %}
-                          <tr>
-                            <td class="po-number__cell">
-                              <span class="po-number__text">
-                                PO number #{{ po_number }}
-                              </span>
-                            </td>
-                          </tr>
-                      {%- endif %}
-                    </table>
-                  </td>
+            <table class="row">
+              <tr>
+                <td style="text-align: center; padding-top: 20px;">
+                  <table class="order-po-number__container" style="margin: 0 auto; display: inline-block;">
+                    <tr>
+                      <td class="order-number__cell">
+                        <span class="order-number__text">
+                          Order {{ order_name }}
+                        </span>
+                      </td>
+                    </tr>
+                    {%- if po_number %}
+                        <tr>
+                          <td class="po-number__cell">
+                            <span class="po-number__text">
+                              PO number #{{ po_number }}
+                            </span>
+                          </td>
+                        </tr>
+                    {%- endif %}
+                  </table>
+                </td>
               </tr>
             </table>
 
@@ -98,6 +116,10 @@
           <td>
             
           <h2>{{ email_title }}</h2>
+          <p>{{ email_body }}</p>
+
+          <p style="background-color: #f8f9fa; border-left: 4px solid {{ shop.email_accent_color }}; padding: 15px; margin: 20px 0;"><strong>🧊 Important:</strong> Please refrigerate your pesto as soon as possible! Our pesto is made fresh without preservatives and needs to stay cold to maintain its quality and flavor.</p>
+
           <table class="text-icon-container">
             <tr class="text-icon-row">
               <td class="text-icon"><img src="{{ 'notifications/question.png' | shopify_asset_url }}" class="text-icon__image"></td>
@@ -404,7 +426,8 @@
         <tr>
           <td>
             
-            <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{{ shop.email }}</a></p>
+            <p class="disclaimer__subtext">Questions? We'd love to hear from you! Just reply to this email or reach out at <a href="mailto:{{ shop.email }}">{{ shop.email }}</a></p>
+            <p class="disclaimer__subtext" style="margin-top: 12px;">— Megan & Will</p>
           </td>
         </tr>
       </table>
