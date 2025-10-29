@@ -162,22 +162,8 @@
           "faq_item_Jd6f3f": {
             "type": "faq_item",
             "settings": {
-              "question": "",
-              "answer": ""
-            }
-          },
-          "faq_item_K9f4ri": {
-            "type": "faq_item",
-            "settings": {
-              "question": "",
-              "answer": ""
-            }
-          },
-          "faq_item_xbPecD": {
-            "type": "faq_item",
-            "settings": {
-              "question": "",
-              "answer": ""
+              "question": "How should I store my pesto when it arrives?",
+              "answer": "<p>Since our fresh basil pesto has no preservatives, it should be <strong>kept </strong>refrigerated and <strong>used within 3 days of delivery. </strong>It can also be refrozen and will keep for up to 1<strong>2 months in the freezer</strong>. </p><p>If you plan to refreeze your jar, we recommend that you take the pesto out and lay it flat in a ziploc. This will make it easy to break off what you want to use without having to thaw it all out!</p>"
             }
           }
         },
@@ -187,9 +173,7 @@
           "faq_item_M4x7DE",
           "faq_item_g6tcTP",
           "faq_item_7fqecx",
-          "faq_item_Jd6f3f",
-          "faq_item_K9f4ri",
-          "faq_item_xbPecD"
+          "faq_item_Jd6f3f"
         ],
         "settings": {
           "title": "Shipping FAQ",
