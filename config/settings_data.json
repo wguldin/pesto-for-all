@@ -120,6 +120,81 @@
       "instagram-feed": {
         "type": "instagram-feed",
         "settings": {}
+      },
+      "shipping-faq": {
+        "type": "shipping-faq",
+        "blocks": {
+          "faq_item_xiGf8z": {
+            "type": "faq_item",
+            "settings": {
+              "question": "How is my pesto shipped?",
+              "answer": "<p>All of our pesto is shipped frozen to ensure maximum freshness. We pack your order with biodegradable ice packs in an insulated box to keep everything as cold as possible during transit. </p>"
+            }
+          },
+          "faq_item_Ge86i8": {
+            "type": "faq_item",
+            "settings": {
+              "question": "What if my pesto arrives thawed or semi-frozen?",
+              "answer": "<p>Don't worry—this is completely normal! </p><p>During shipping, especially in warmer months, thawing may occur. As long as your pesto is below 40°F (refrigerator cold) when it arrives, it is safe to use. <br/><br/>Since our pesto has no preservatives, use it within 3 days after delivery or refreeze it and use within one year.</p>"
+            }
+          },
+          "faq_item_M4x7DE": {
+            "type": "faq_item",
+            "settings": {
+              "question": "Can I refreeze pesto that arrived thawed?",
+              "answer": "<p>Yes! If your pesto arrives cold (below 40°F) but thawed, you can safely refreeze it. It's honestly how we have all of our pesto at home, and the flavor holds up well. <br/><br/>You can also pop it in the refrigerator, but since it has no preservatives, you'll want to use it within 3 days (unless you decide to refreeze it).</p>"
+            }
+          },
+          "faq_item_g6tcTP": {
+            "type": "faq_item",
+            "settings": {
+              "question": "How long does shipping take?",
+              "answer": "<p>We ship orders so they will arrive within 2-3 business days depending on your location.</p><p>We ship all orders on Monday to avoid weekend delays. <br/></p><p>You'll receive a tracking number via email as soon as your order ships so you can monitor its progress.</p><p><br/></p>"
+            }
+          },
+          "faq_item_7fqecx": {
+            "type": "faq_item",
+            "settings": {
+              "question": "Where do you ship your pesto to?",
+              "answer": "<p>We currently ship to all 48 states in the continental U.S. Because our pesto has to arrive cold, we have two shipping tiers.<br/><br/>One is a flat <strong>$15</strong> and includes most of the midwest. The other tier for the rest of the country is a flat <strong>$35</strong>. We're working to bring these costs down, but for a small brand like us, it's simply the shipping costs we have to pay to get your pesto there in around 2 days.</p>"
+            }
+          },
+          "faq_item_Jd6f3f": {
+            "type": "faq_item",
+            "settings": {
+              "question": "",
+              "answer": ""
+            }
+          },
+          "faq_item_K9f4ri": {
+            "type": "faq_item",
+            "settings": {
+              "question": "",
+              "answer": ""
+            }
+          },
+          "faq_item_xbPecD": {
+            "type": "faq_item",
+            "settings": {
+              "question": "",
+              "answer": ""
+            }
+          }
+        },
+        "block_order": [
+          "faq_item_xiGf8z",
+          "faq_item_Ge86i8",
+          "faq_item_M4x7DE",
+          "faq_item_g6tcTP",
+          "faq_item_7fqecx",
+          "faq_item_Jd6f3f",
+          "faq_item_K9f4ri",
+          "faq_item_xbPecD"
+        ],
+        "settings": {
+          "title": "Shipping FAQ",
+          "description": "We want to make sure your pesto arrives fresh and delicious! Here are answers to common questions about shipping and handling your frozen pesto."
+        }
       }
     },
     "content_for_index": []
