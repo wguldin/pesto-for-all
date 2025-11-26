@@ -1,0 +1,45 @@
+# Jekyll Configuration for Pesto For All
+
+# Site settings
+title: Pesto For All
+description: The freshest pesto you can buy - stone ground basil from our farm
+email: hello@pestoforall.co
+baseurl: "" # Leave empty for custom domain
+url: "" # Will be set by GitHub Pages
+
+# Social Media
+instagram_username: pesto_for_all
+
+# Google Maps API Key
+google_maps_api_key: AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8
+
+# Color scheme (from Shopify settings)
+colors:
+  text: "#4A5A2A"
+  green_dark: "#2C5A2E"
+  green_light: "#A5C76B"
+  yellow: "#FFFFCC"
+
+# Typography
+fonts:
+  body_family: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+  heading_family: "'Quicksand', sans-serif"
+
+# Collections
+collections:
+  recipes:
+    output: true
+    permalink: /recipes/:name/
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - .tool-versions
+  - README.md
+  - Gemfile
+  - Gemfile.lock

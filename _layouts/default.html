@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; connect-src 'self' https:; frame-src 'self' https:;">
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+
+    {% if page.description %}
+      <meta name="description" content="{{ page.description }}">
+    {% else %}
+      <meta name="description" content="{{ site.description }}">
+    {% endif %}
+
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="index,follow">
+
+    <!-- Language and Region -->
+    <meta name="language" content="en">
+
+    <!-- Preload critical resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//w.behold.so">
+
+    <style>
+      :root {
+        --font-body-family: {{ site.fonts.body_family }};
+        --font-heading-family: {{ site.fonts.heading_family }};
+
+        --color-text: {{ site.colors.text }};
+        --color-green--dark: {{ site.colors.green_dark }};
+        --color-green--light: {{ site.colors.green_light }};
+        --color-yellow: {{ site.colors.yellow }};
+        --color-yellow--lightest: #fffef5;
+        --color-light-green--bg: #f5f8f0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="{{ '/assets/css/base.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/accessibility.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500..700&display=swap" rel="stylesheet">
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    </script>
+
+    {% seo %}
+  </head>
+
+  <body>
+    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+      Skip to content
+    </a>
+
+    {% include header.html %}
+
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      {{ content }}
+    </main>
+
+    {% include footer.html %}
+
+    <ul hidden>
+      <li id="a11y-refresh-page-message">Refresh page to update content</li>
+    </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ '/assets/js/config.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/errors.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/utils.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/accessibility.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/modal.js' | relative_url }}" defer="defer"></script>
+    <script src="{{ '/assets/js/block-transitions.js' | relative_url }}" defer="defer"></script>
+  </body>
+</html>

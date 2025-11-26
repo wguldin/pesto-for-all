@@ -1,0 +1,34 @@
+<header class="header-wrapper" role="banner">
+  <div class="header">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav__hamburger" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
+        <span class="nav__hamburger-bar" aria-hidden="true"></span>
+        <span class="nav__hamburger-bar" aria-hidden="true"></span>
+        <span class="nav__hamburger-bar" aria-hidden="true"></span>
+      </button>
+      <a class="nav__logo" href="/" aria-label="{{ site.title }} home">
+        <img
+          src="{{ '/assets/images/logo.svg' | relative_url }}"
+          width="100"
+          height="100"
+          alt="{{ site.title }}"
+          loading="eager"
+        >
+      </a>
+      <ul class="nav__link-list">
+        <li class="nav__link"><a class="fancy-link" href="/recipes.html" aria-label="View our pesto recipes">Recipes</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/where-to-find-us.html" aria-label="Where to find us">Where to find us</a></li>
+        <li class="nav__link"><a class="fancy-link" href="/#about-us" aria-label="Learn about us">About Us</a></li>
+      </ul>
+    </nav>
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true" role="navigation" aria-label="Mobile menu">
+      <button class="mobile-menu__close" aria-label="Close menu">&times;</button>
+      <ul class="mobile-menu__links">
+        <li><a href="/" aria-label="Home page">Home</a></li>
+        <li><a href="/recipes.html" aria-label="View our pesto recipes">Recipes</a></li>
+        <li><a href="/where-to-find-us.html" aria-label="Where to find us">Where to find us</a></li>
+        <li><a href="/#about-us" aria-label="Learn about us">About Us</a></li>
+      </ul>
+    </div>
+  </div>
+</header>

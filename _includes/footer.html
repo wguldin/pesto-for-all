@@ -1,0 +1,15 @@
+<footer class="footer">
+  <div class="footer__content">
+    <ul class="footer__links">
+      <li><a class="fancy-link" href="https://www.instagram.com/{{ site.instagram_username }}/" target="_blank" rel="noopener">Follow us &rarr; On Instagram</a></li>
+      <li><a class="fancy-link" href="mailto:{{ site.email }}">Say "Hi!" &rarr; {{ site.email }}</a></li>
+    </ul>
+
+    <ul class="footer__copyright">
+      <li>&copy; {{ 'now' | date: '%Y' }} {{ site.title }}</li>
+      <li>Made with &hearts; in Missouri</li>
+    </ul>
+  </div>
+
+  <img class="footer__logo" src="{{ '/assets/images/logo.svg' | relative_url }}" alt="{{ site.title }}" />
+</footer>

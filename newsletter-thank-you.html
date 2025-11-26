@@ -1,0 +1,65 @@
+---
+layout: default
+title: Thank You for Subscribing!
+description: Thanks for joining the Pesto For All newsletter
+---
+
+<div class="thank-you-page">
+  <div class="thank-you-content">
+    <h1>Thanks for signing up!</h1>
+
+    <p>
+      Be sure to <strong>check your email</strong> and confirm your subscription.
+    </p>
+
+    <p>We'll send updates about our farm, and new recipe ideas about once a month. We never sell or give out your information.</p>
+
+    <div class="thank-you-actions">
+      <a href="/" class="button">Back to Home</a>
+      <a href="/recipes.html" class="button">Browse Recipes</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.thank-you-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.thank-you-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.thank-you-actions {
+  margin-top: 3rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .thank-you-title {
+    font-size: 2rem;
+  }
+
+  .thank-you-message {
+    font-size: 1.1rem;
+  }
+
+  .thank-you-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .thank-you-actions .button {
+    width: 100%;
+  }
+}
+</style>

@@ -1,0 +1,47 @@
+<style>
+  .divider {
+    grid-column: 1 / span 5;
+    border: 0;
+    margin: 0;
+    grid-row: 2;
+    align-self: end;
+    position: relative;
+    top: 1rem;
+    z-index: 100000;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+
+  .divider hr:first-child, .divider hr:last-child {
+    margin: 0;
+    border: 0;
+    height: 16px;
+    position: relative;
+    -webkit-mask-image: url("{{ '/assets/images/border.svg' | relative_url }}");
+    mask-image: url("{{ '/assets/images/border.svg' | relative_url }}");
+  }
+
+  .divider hr:first-child {
+    background-color: var(--color-green--dark);
+    top: 10px;
+  }
+
+  .divider hr:last-child {
+    background-color: var(--color-green--light);
+    top: -10px;
+  }
+
+  .block--green .divider {
+    grid-column: 7 / span 5;
+  }
+
+  .divider-container--background-green {
+    background-color: var(--color-light-green--bg);
+  }
+
+</style>
+
+<div class="divider">
+  <hr />
+  <hr />
+</div>

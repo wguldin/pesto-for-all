@@ -1,0 +1,62 @@
+<div class="modal" id="waitlist-modal" aria-hidden="true">
+  <div class="modal__overlay" tabindex="-1" data-modal-close>
+    <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-title">Sign up <br />for updates</h2>
+      </div>
+      <div class="modal__content">
+        <div class="modal__form-content">
+          <div>
+            Learn about the latest things happening on the farm and get fresh <strong>pesto recipes</strong> straight to your inbox (about once a month).
+          </div>
+
+          <!-- Kit (ConvertKit) Form -->
+          <form
+            action="https://api.convertkit.com/v3/forms/8811134/subscribe"
+            class="newsletter-form"
+            method="post"
+          >
+            <div class="field">
+              <label class="field__label" for="NewsletterForm--modal">
+                Email address
+              </label>
+              <input
+                id="NewsletterForm--modal"
+                type="email"
+                name="email"
+                class="field__input"
+                aria-required="true"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                placeholder="your@email.com"
+                required
+              >
+            </div>
+            <button type="submit" class="button newsletter-form__button" data-element="submit">
+              Sign up
+            </button>
+
+            <input type="hidden" name="api_key" value="M7ueYVuzqPJC3xrv5BrsEg" />
+
+            <!-- redirect after successful subscription -->
+            <input
+              type="hidden"
+              name="redirect_url"
+              value="{{ '/newsletter-thank-you.html' | absolute_url }}"
+            />
+          </form>
+          <p style="font-size: 0.875rem; margin-top: 1rem; opacity: 0.8;">We respect your privacy and never give out your information. Unsubscribe at any time.</p>
+        </div>
+        <div class="modal__success-content" style="display: none;">
+          <div class="newsletter-form__message newsletter-form__message--success form__message">
+            Thanks for signing up! Check your email to confirm your subscription.
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="modal__close" aria-label="Close modal" data-modal-close>
+      &times;
+    </button>
+  </div>
+</div>
