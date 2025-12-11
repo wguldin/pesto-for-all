@@ -65,12 +65,53 @@ class Modal {
 
       // Handle form submission
       if (this.form) {
-        this.form.addEventListener('submit', () => {
-          // Let the form submit normally
-          // The success state will be handled by the page reload
-          if (this.form.checkValidity()) {
-            this.showSuccess();
+        this.form.addEventListener('submit', (e) => {
+          e.preventDefault(); // Prevent default form submission
+          
+          if (!this.form.checkValidity()) {
+            return; // Let browser handle validation
           }
+          
+          // Get form data
+          const formData = new FormData(this.form);
+          const submitButton = this.form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton ? submitButton.textContent : '';
+          
+          // Show loading state
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Signing up...';
+          }
+          
+          // Submit to ConvertKit API
+          fetch(this.form.action, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            // On success, redirect to thank you page
+            // Get redirect URL from form data, or use default
+            let redirectUrl = formData.get('redirect_url');
+            if (!redirectUrl) {
+              redirectUrl = '/newsletter-thank-you.html';
+            }
+            // Ensure we have a valid URL (handle both absolute and relative)
+            if (!redirectUrl.startsWith('http')) {
+              redirectUrl = window.location.origin + redirectUrl;
+            }
+            window.location.href = redirectUrl;
+          })
+          .catch(error => {
+            console.error('Error submitting form:', error);
+            // Restore button state
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+            // Show error message to user
+            alert('There was an error signing up. Please try again.');
+          });
         });
       }
     } catch (error) {
