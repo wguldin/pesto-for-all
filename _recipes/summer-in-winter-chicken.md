@@ -1,6 +1,7 @@
 ---
 title: Summer-in-winter Chicken
 order: 1
+recipe_link: https://www.bbcgoodfood.com/recipes/summer-winter-chicken
 ---
 
 Will and I first made this recipe when we were dating as a weekend special meal.
