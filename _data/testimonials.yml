@@ -1,0 +1,50 @@
+# Screenshots of Instagram stories and posts that tag @pesto_for_all, shown in the
+# homepage carousel (_includes/testimonials.html).
+#
+# The carousel renders these top to bottom, so the order of this file IS the order
+# on the page — reorder by moving an entry up or down.
+#
+# id:     which image file to use — assets/images/testimonials/testimonial-<id>-*.jpg.
+#         Tied to those filenames, so don't renumber it to reorder; move the block.
+# handle: the poster's Instagram handle. Omit it when the screenshot doesn't show
+#         one — the card runs without attribution rather than with a guess.
+# alt:    describes the screenshot for anyone who can't see it. Every entry needs one.
+#
+# Ordered strongest-first: the first few are what most people will see without
+# touching the arrows, so they're the ones doing the work.
+
+- id: 7
+  handle: annettefarouki
+  alt: "Instagram story showing sliced heirloom tomatoes topped with pesto and shredded mozzarella"
+
+- id: 10
+  handle: 417foodist
+  alt: "Instagram story of a hand holding a jar of Pesto For All stone-ground basil pesto"
+
+- id: 9
+  handle: rhianonbrownphotography
+  alt: "Instagram story showing linguine with tomato basil sauce, parmesan, pine nuts, and fresh basil"
+
+- id: 11
+  handle: shansty_db
+  alt: "Instagram story showing a flatbread pizza with pesto, pulled pork, and fresh spinach"
+
+- id: 5
+  handle: sensitivelysweet
+  alt: "Instagram story showing a slice of toasted sourdough spread thick with pesto beside the jar"
+
+- id: 6
+  handle: blythecobakery
+  alt: "Instagram story showing a bowl of penne with shrimp, cherry tomatoes, and pesto"
+
+- id: 3
+  handle: wife.mom.tired.hungry
+  alt: "Instagram post showing a marble counter covered in market peppers and eggplant around a jar of Pesto For All"
+
+- id: 2
+  handle: soybeanbabi
+  alt: "Instagram story showing a jar of Pesto For All beside a blender of arugula and white beans"
+
+- id: 1
+  handle: 417_hot_mess_express
+  alt: "Instagram story collage of homemade pizza being topped with pesto and marinara, then eaten"

@@ -1,0 +1,110 @@
+<section class="block block--stories" id="testimonials">
+    <div class="stories">
+        <h2 class="stories__headline">What people are making</h2>
+
+        <div
+            class="stories__viewer"
+            data-stories
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Stories our customers tagged us in"
+        >
+            <div class="stories__stage">
+                <button
+                    type="button"
+                    class="stories__arrow stories__arrow--prev"
+                    data-stories-prev
+                    aria-label="Show previous stories"
+                    disabled
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path
+                            d="M15 4l-8 8 8 8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+
+                <ul class="stories__track" data-stories-track>
+                    {% for testimonial in site.data.testimonials %}
+                    <li class="story" data-stories-item>
+                        <img
+                            src="{{ '/assets/images/testimonials/testimonial-' | append: testimonial.id | append: '-800w.jpg' | relative_url }}"
+                            srcset="{{ '/assets/images/testimonials/testimonial-' | append: testimonial.id | append: '-400w.jpg' | relative_url }} 400w,
+                                    {{ '/assets/images/testimonials/testimonial-' | append: testimonial.id | append: '-800w.jpg' | relative_url }} 800w"
+                            sizes="(max-width: 36rem) 82vw, (max-width: 60rem) 42vw, (max-width: 80rem) 28vw, 21vw"
+                            class="story__shot"
+                            alt="{{ testimonial.alt }}"
+                            {%
+                            if
+                            forloop.first
+                            %}loading="eager"
+                            {%
+                            else
+                            %}loading="lazy"
+                            {%
+                            endif
+                            %}
+                        />
+                        <div class="story__caption">
+                            {% if testimonial.handle %}
+                            <a
+                                class="story__handle"
+                                href="https://www.instagram.com/{{ testimonial.handle }}/"
+                                target="_blank"
+                                rel="noopener"
+                                >&#64;{{ testimonial.handle }}</a
+                            >
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <button
+                    type="button"
+                    class="stories__arrow stories__arrow--next"
+                    data-stories-next
+                    aria-label="Show more stories"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <path
+                            d="M9 4l8 8-8 8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+            </div>
+
+            <p
+                class="visually-hidden"
+                aria-live="polite"
+                data-stories-status
+            ></p>
+        </div>
+
+        <a
+            class="fancy-link stories__link"
+            href="https://www.instagram.com/{{ site.instagram_username }}/"
+            target="_blank"
+            rel="noopener"
+            >Follow us @pesto_for_all</a
+        >
+    </div>
+</section>
